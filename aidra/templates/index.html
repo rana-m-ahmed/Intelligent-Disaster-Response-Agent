@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDRA – Disaster Response Orchestrator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Panel: KPI Dashboard -->
+        <div class="left-panel">
+            <h2>KPI Dashboard</h2>
+            <div class="kpi-box">
+                <div class="kpi-label">Victims Saved</div>
+                <div class="kpi-value" id="victims-saved">0/5</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label">Avg Rescue Time</div>
+                <div class="kpi-value" id="avg-time">0.0s</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label">Risk Exposure</div>
+                <div class="kpi-value" id="risk-exposure">0.0</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label">Trade-off Banner</div>
+                <div class="kpi-value" id="tradeoff-banner">Balanced approach</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label">CSP Assignment</div>
+                <div class="kpi-value" id="csp-assignment">Loading...</div>
+            </div>
+
+            <h3>Controls</h3>
+            <button id="btn-scenario-a" class="control-btn">Scenario A</button>
+            <button id="btn-scenario-b" class="control-btn">Scenario B</button>
+            <button id="btn-scenario-c" class="control-btn">Scenario C</button>
+
+            <label for="algorithm-select">Algorithm:</label>
+            <select id="algorithm-select" class="control-input">
+                <option value="astar">A*</option>
+                <option value="bfs">BFS</option>
+                <option value="dfs">DFS</option>
+                <option value="greedy">Greedy</option>
+            </select>
+
+            <label for="alpha-slider">Risk Aversion (α):</label>
+            <input type="range" id="alpha-slider" min="0" max="10" step="0.1" value="1" class="control-input">
+            <span id="alpha-value">1.0</span>
+
+            <button id="btn-pause" class="control-btn">Pause</button>
+            <button id="btn-resume" class="control-btn">Resume</button>
+            <button id="btn-reset" class="control-btn">Reset</button>
+            <button id="btn-block-mode" class="control-btn">🚧 Block Mode: OFF</button>
+            <button id="btn-plan-first" class="control-btn">Plan First Victim</button>
+        </div>
+
+        <!-- Center: 3D Visualisation -->
+        <div class="center-panel" id="canvas-container"></div>
+
+        <!-- Right Panel: Decision Log -->
+        <div class="right-panel">
+            <h2>Decision Log</h2>
+            <div class="log-container" id="log-container">
+                <p class="log-placeholder">Waiting for events...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js and SocketIO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='three-controls.js') }}"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

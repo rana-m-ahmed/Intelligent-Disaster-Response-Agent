@@ -1,0 +1,13 @@
+algorithm,total_cost,nodes_expanded
+bfs_alpha_0.0,8.0,44
+bfs_alpha_1.0,8.112,44
+bfs_alpha_inf,0.11199999999999989,44
+dfs_alpha_0.0,8.0,93
+dfs_alpha_1.0,8.112,93
+dfs_alpha_inf,0.11199999999999989,93
+greedy_alpha_0.0,8.0,9
+greedy_alpha_1.0,8.112,9
+greedy_alpha_inf,0.11199999999999989,9
+astar_alpha_0.0,8.0,9
+astar_alpha_1.0,8.112,16
+astar_alpha_inf,0.11199999999999989,9
