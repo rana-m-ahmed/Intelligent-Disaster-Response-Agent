@@ -3,8 +3,9 @@ from __future__ import annotations
 import heapq
 import math
 import time
+from collections import deque
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Deque, Dict, List, Optional, Tuple
 
 from environment import CellType, Environment
 from fuzzy import FuzzyRisk
@@ -20,6 +21,7 @@ class SearchResult:
     risk_score: float
     nodes_expanded: int
     frontier_sizes: List[int]
+    optimality_ratio: float
     runtime_sec: float
 
 
@@ -39,26 +41,50 @@ def _neighbors(env: Environment, pos: GridPos) -> List[GridPos]:
     result = []
     for r, c in candidates:
         if 0 <= r < env.size and 0 <= c < env.size:
-            if env.grid[r][c] != CellType.BLOCKED:
-                result.append((r, c))
+            if env.grid[r][c] == CellType.BLOCKED:
+                continue
+            result.append((r, c))
     return result
 
 
 def _cell_features(env: Environment, pos: GridPos) -> List[float]:
     """Build ML features for a grid cell."""
-    center = env.med_centers[0]
-    distance = manhattan(pos, center)
     cell = env.grid[pos[0]][pos[1]]
-    if cell == CellType.RISK:
-        area_risk = 0.7
-        severity = 2.0
-    elif cell == CellType.BLOCKED:
-        area_risk = 1.0
-        severity = 2.0
-    else:
-        area_risk = 0.1
-        severity = 0.0
-    return [severity, float(distance), area_risk, 1.0]
+    center = min(env.med_centers, key=lambda c: manhattan(pos, c))
+    distance = manhattan(pos, center)
+    neighborhood = _neighborhood_stats(env, pos)
+    severity = 2.0 if cell == CellType.RISK else 0.0
+    return [severity, float(distance), neighborhood["hazard_rate"], neighborhood["block_prob"]]
+
+
+def _neighborhood_stats(env: Environment, pos: GridPos) -> Dict[str, float]:
+    rows = range(max(0, pos[0] - 1), min(env.size, pos[0] + 2))
+    cols = range(max(0, pos[1] - 1), min(env.size, pos[1] + 2))
+    total = 0
+    blocked = 0
+    risky = 0
+    for r in rows:
+        for c in cols:
+            total += 1
+            cell = env.grid[r][c]
+            if cell == CellType.BLOCKED:
+                blocked += 1
+            elif cell == CellType.RISK:
+                risky += 1
+    return {
+        "block_prob": blocked / max(total, 1),
+        "hazard_rate": risky / max(total, 1),
+    }
+
+
+def _cell_penalty(env: Environment, pos: GridPos, ml_model: MLModel, fuzzy: FuzzyRisk) -> float:
+    cell = env.grid[pos[0]][pos[1]]
+    if cell != CellType.RISK:
+        return 0.0
+    ml_risk = ml_model.predict_risk(_cell_features(env, pos))
+    neighborhood = _neighborhood_stats(env, pos)
+    fuzzy_risk = fuzzy.compute_risk_weight(neighborhood["block_prob"], neighborhood["hazard_rate"])
+    return 1.0 + ((ml_risk + fuzzy_risk) / 2.0)
 
 
 def edge_cost(
@@ -68,13 +94,14 @@ def edge_cost(
     fuzzy: FuzzyRisk,
     alpha: float,
 ) -> float:
-    """Edge cost: travel_time * (1 + alpha * ML_risk * fuzzy_weight)."""
-    travel_time = 1.0
-    ml_risk = ml_model.predict_risk(_cell_features(env, pos))
-    fuzzy_weight = fuzzy.compute_risk_weight(ml_risk, ml_risk)
+    """Edge cost: base move cost plus alpha-weighted risk penalty."""
+    base_move_cost = 1.0
+    if env.grid[pos[0]][pos[1]] == CellType.BLOCKED:
+        return math.inf
+    penalty = _cell_penalty(env, pos, ml_model, fuzzy)
     if math.isinf(alpha):
-        return ml_risk * fuzzy_weight
-    return travel_time * (1.0 + alpha * ml_risk * fuzzy_weight)
+        return base_move_cost + penalty
+    return base_move_cost + (alpha * penalty)
 
 
 def compute_path_cost(
@@ -88,14 +115,13 @@ def compute_path_cost(
     total = 0.0
     risk = 0.0
     for pos in path[1:]:
-        ml_risk = ml_model.predict_risk(_cell_features(env, pos))
-        fuzzy_weight = fuzzy.compute_risk_weight(ml_risk, ml_risk)
-        risk += ml_risk
-        if math.isinf(alpha):
-            total += ml_risk * fuzzy_weight
-        else:
-            total += 1.0 * (1.0 + alpha * ml_risk * fuzzy_weight)
+        risk += _cell_penalty(env, pos, ml_model, fuzzy)
+        total += edge_cost(env, pos, ml_model, fuzzy, alpha)
     return total, risk
+
+
+def _hop_count(path: List[GridPos]) -> float:
+    return float(max(len(path) - 1, 0))
 
 
 def search(
@@ -112,57 +138,140 @@ def search(
     if algo not in {"bfs", "dfs", "greedy", "astar"}:
         raise ValueError(f"Unsupported algorithm: {algorithm}")
     start_time = time.perf_counter()
+    result = _run_search_core(env, start, goal, algo, ml_model, fuzzy, alpha)
+    if algo == "bfs":
+        optimality_ratio = 1.0
+    else:
+        bfs_baseline = _run_search_core(env, start, goal, "bfs", ml_model, fuzzy, alpha)
+        optimality_ratio = result.total_cost / max(bfs_baseline.total_cost, 1e-9)
+    runtime_sec = time.perf_counter() - start_time
+    return SearchResult(
+        path=result.path,
+        total_cost=result.total_cost,
+        risk_score=result.risk_score,
+        nodes_expanded=result.nodes_expanded,
+        frontier_sizes=result.frontier_sizes,
+        optimality_ratio=optimality_ratio,
+        runtime_sec=runtime_sec,
+    )
+
+
+def _run_search_core(
+    env: Environment,
+    start: GridPos,
+    goal: GridPos,
+    algo: str,
+    ml_model: MLModel,
+    fuzzy: FuzzyRisk,
+    alpha: float,
+) -> SearchResult:
     frontier_sizes: List[int] = []
     nodes_expanded = 0
+    came_from: Dict[GridPos, Optional[GridPos]] = {start: None}
 
-    if algo in {"bfs", "dfs"}:
-        frontier: List[GridPos] = [start]
-        came_from: Dict[GridPos, Optional[GridPos]] = {start: None}
+    if algo == "bfs":
+        frontier: Deque[GridPos] = deque([start])
+        visited = {start}
         while frontier:
-            current = frontier.pop(0) if algo == "bfs" else frontier.pop()
+            current = frontier.popleft()
             nodes_expanded += 1
             if current == goal:
                 break
             for nxt in _neighbors(env, current):
+                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
+                    continue
+                if nxt in visited:
+                    continue
+                visited.add(nxt)
+                came_from[nxt] = current
+                frontier.append(nxt)
+            frontier_sizes.append(len(frontier))
+    elif algo == "dfs":
+        frontier = [start]
+        visited = set()
+        while frontier:
+            current = frontier.pop()
+            if current in visited:
+                continue
+            visited.add(current)
+            nodes_expanded += 1
+            if current == goal:
+                break
+            for nxt in reversed(_neighbors(env, current)):
+                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
+                    continue
+                if nxt in visited:
+                    continue
                 if nxt not in came_from:
                     came_from[nxt] = current
-                    frontier.append(nxt)
-            # Track frontier size for traceability after each expansion.
+                frontier.append(nxt)
+            frontier_sizes.append(len(frontier))
+    elif algo == "greedy":
+        frontier = []
+        counter = 0
+        heapq.heappush(frontier, (manhattan(start, goal), counter, start))
+        visited = {start}
+        while frontier:
+            _, _, current = heapq.heappop(frontier)
+            nodes_expanded += 1
+            if current == goal:
+                break
+            ordered_neighbors = sorted(
+                _neighbors(env, current),
+                key=lambda nxt: (manhattan(nxt, goal), abs(nxt[1] - goal[1]), abs(nxt[0] - goal[0])),
+            )
+            for nxt in ordered_neighbors:
+                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
+                    continue
+                if nxt in visited:
+                    continue
+                visited.add(nxt)
+                came_from[nxt] = current
+                counter += 1
+                heapq.heappush(frontier, (manhattan(nxt, goal), counter, nxt))
             frontier_sizes.append(len(frontier))
     else:
         frontier = []
-        heapq.heappush(frontier, (0.0, start))
-        came_from = {start: None}
-        g_costs = {start: 0.0}
+        counter = 0
+        heapq.heappush(frontier, (0.0, 0.0, counter, start))
+        best_costs = {start: 0.0}
+        closed = set()
         while frontier:
-            _, current = heapq.heappop(frontier)
+            _, current_g, _, current = heapq.heappop(frontier)
+            if current in closed:
+                continue
+            closed.add(current)
             nodes_expanded += 1
             if current == goal:
                 break
             for nxt in _neighbors(env, current):
+                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
+                    continue
                 step_cost = edge_cost(env, nxt, ml_model, fuzzy, alpha)
-                new_cost = g_costs[current] + step_cost
-                if nxt not in g_costs or new_cost < g_costs[nxt]:
-                    g_costs[nxt] = new_cost
-                    came_from[nxt] = current
-                    if algo == "greedy":
-                        priority = manhattan(nxt, goal)
-                    else:
-                        priority = new_cost + manhattan(nxt, goal)
-                    heapq.heappush(frontier, (priority, nxt))
-            # Track frontier size for traceability after each expansion.
+                new_cost = current_g + step_cost
+                if nxt in best_costs and new_cost >= best_costs[nxt]:
+                    continue
+                best_costs[nxt] = new_cost
+                came_from[nxt] = current
+                counter += 1
+                priority = new_cost + manhattan(nxt, goal)
+                heapq.heappush(frontier, (priority, new_cost, counter, nxt))
             frontier_sizes.append(len(frontier))
 
     path = _reconstruct_path(came_from, start, goal)
-    total_cost, risk_score = compute_path_cost(env, path, ml_model, fuzzy, alpha)
-    runtime_sec = time.perf_counter() - start_time
+    if algo in {"bfs", "dfs", "greedy"}:
+        total_cost = _hop_count(path)
+        risk_score = 0.0
+    else:
+        total_cost, risk_score = compute_path_cost(env, path, ml_model, fuzzy, alpha)
     return SearchResult(
         path=path,
         total_cost=total_cost,
         risk_score=risk_score,
         nodes_expanded=nodes_expanded,
         frontier_sizes=frontier_sizes,
-        runtime_sec=runtime_sec,
+        optimality_ratio=1.0,
+        runtime_sec=0.0,
     )
 
 

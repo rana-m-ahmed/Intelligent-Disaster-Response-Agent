@@ -134,6 +134,22 @@ class MLModel:
         blended = max(pred_norm, float(features[2]))
         return float(max(0.0, min(1.0, blended)))
 
+    def get_metrics_report(self) -> Dict[str, Dict[str, Dict[str, object]]]:
+        """Return a JSON-serializable metrics snapshot for both tasks and models."""
+        return {
+            task: {
+                name: {
+                    "accuracy": report.accuracy,
+                    "precision": report.precision,
+                    "recall": report.recall,
+                    "f1": report.f1,
+                    "confusion": report.confusion,
+                }
+                for name, report in reports.items()
+            }
+            for task, reports in self.metrics.items()
+        }
+
     def _generate_dataset(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Generate a synthetic dataset for training."""
         rng = np.random.default_rng(42)

@@ -88,6 +88,13 @@ function init() {
         emitPlanRoute(first.id);
     });
 
+    document.getElementById("btn-plan-full").addEventListener("click", () => {
+        const algorithm = document.getElementById("algorithm-select").value;
+        const alpha = parseFloat(document.getElementById("alpha-slider").value);
+        socket.emit("plan_full_rescue", { algorithm, alpha });
+        appendLogEntry("USER ACTION", `Planning full rescue with ${algorithm.toUpperCase()} (alpha=${alpha.toFixed(1)}).`, "ASSIGNMENT");
+    });
+
     document.getElementById("btn-block-mode").addEventListener("click", () => {
         blockModeActive = !blockModeActive;
         const btn = document.getElementById("btn-block-mode");
@@ -102,8 +109,24 @@ function init() {
 }
 
 function initScenario(scenario, buttonId) {
+    resetClientScenarioView();
     setActiveScenarioButton(buttonId);
     socket.emit("init_scenario", { scenario });
+}
+
+function resetClientScenarioView() {
+    clearRouteLines();
+    Object.values(victimMeshes).forEach((mesh) => scene.remove(mesh));
+    Object.values(rescuedVictimMeshes).forEach((mesh) => scene.remove(mesh));
+    Object.values(ambulanceMeshes).forEach((mesh) => scene.remove(mesh));
+    victimMeshes = {};
+    rescuedVictimMeshes = {};
+    ambulanceMeshes = {};
+    routeDrawAnimations = {};
+    pendingRouteAnimations = {};
+    fadingRouteLines = [];
+    const logContainer = document.getElementById("log-container");
+    logContainer.innerHTML = '<p class="log-placeholder">Waiting for events...</p>';
 }
 
 function setActiveScenarioButton(buttonId) {
@@ -188,6 +211,7 @@ function onCanvasClick(event) {
     const cellType = gridHit.userData.cellType;
 
     if (event.shiftKey) {
+        markCellBlocked(coords);
         socket.emit("trigger_event", { type: "block", coords });
         return;
     }
@@ -196,8 +220,20 @@ function onCanvasClick(event) {
         return;
     }
     if (blockModeActive && cellType !== "BLOCKED") {
+        markCellBlocked(coords);
         socket.emit("trigger_event", { type: "block", coords });
     }
+}
+
+function markCellBlocked(coords) {
+    const key = `${coords[0]},${coords[1]}`;
+    const mesh = gridMeshes[key];
+    if (!mesh || mesh.userData.cellType === "BLOCKED") {
+        return;
+    }
+    mesh.userData.cellType = "BLOCKED";
+    mesh.material.color.setHex(0x1f0a0a);
+    mesh.material.emissive.setHex(0xff0000);
 }
 
 function onWindowResize() {
@@ -372,6 +408,15 @@ function formatAssignmentPlan(plan) {
         .join(" | ");
 }
 
+function formatSurvivalList(victims) {
+    if (!victims || victims.length === 0) {
+        return "None";
+    }
+    return victims
+        .map((victim) => `${victim.id}:${Number(victim.survival_prob ?? 0).toFixed(2)}`)
+        .join(" | ");
+}
+
 socket.on("state_update", (data) => {
     gameState = data;
 
@@ -405,6 +450,10 @@ socket.on("state_update", (data) => {
 
         const victimMesh = createVictim(victim.severity);
         victimMesh.position.set(x, 0.5, y);
+        if (victimMesh.material) {
+            victimMesh.material.transparent = true;
+            victimMesh.material.opacity = 0.35 + 0.65 * Math.max(0, Math.min(1, victim.survival_prob ?? 0.5));
+        }
         victimMesh.userData = {
             victimId: victim.id,
             survival: victim.survival_prob,
@@ -474,6 +523,7 @@ socket.on("state_update", (data) => {
     document.getElementById("avg-time").textContent = data.avg_rescue_time > 0 ? `${data.avg_rescue_time.toFixed(2)}s` : "-";
     document.getElementById("risk-exposure").textContent = data.risk_exposure > 0 ? data.risk_exposure.toFixed(3) : "-";
     document.getElementById("csp-assignment").textContent = formatAssignmentPlan(data.csp_assignment);
+    document.getElementById("victim-survival").textContent = formatSurvivalList((data.victims || []).filter((victim) => !victim.rescued));
     document.getElementById("alpha-value").textContent = parseFloat(document.getElementById("alpha-slider").value).toFixed(1);
     updateTradeoffBanner();
 });
@@ -505,9 +555,25 @@ socket.on("route_planned", (data) => {
 
     appendLogEntry(
         data.is_replan ? "REPLAN" : "ROUTE SELECTION",
-        `${ambId} -> ${data.victim_id || "target"} | ${data.algorithm ? data.algorithm.toUpperCase() : "A*"} (alpha=${Number(data.alpha ?? 1).toFixed(1)}), cost=${Number(data.cost || 0).toFixed(2)}, risk=${Number(data.risk_score || 0).toFixed(2)}. ${data.justification || ""}`,
+        `${ambId} -> ${data.victim_id || "target"} | ${data.algorithm ? data.algorithm.toUpperCase() : "A*"} (alpha=${Number(data.alpha ?? 1).toFixed(1)}), cost=${Number(data.cost || 0).toFixed(2)}, risk=${Number(data.risk_score || 0).toFixed(2)}, opt=${Number(data.optimality_ratio ?? 1).toFixed(3)}, fuzzy=${Number(data.fuzzy_risk_along_path ?? 0).toFixed(3)}. ${data.justification || ""}`,
         data.is_replan ? "REPLAN" : "ROUTE_SELECTION"
     );
+});
+
+socket.on("full_rescue_planned", (data) => {
+    const planText = Object.entries(data.assignment_plan || {})
+        .map(([resource, victims]) => `${resource}: ${Array.isArray(victims) ? victims.join(" -> ") : victims}`)
+        .join(" | ");
+    const routeText = Object.entries(data.route_summary || {})
+        .map(([amb, info]) => `${amb} -> ${info.victim_id} (cost=${Number(info.route_cost || 0).toFixed(2)}, priority=${Number(info.priority || 0).toFixed(3)})`)
+        .join(" | ");
+    appendLogEntry("ASSIGNMENT", `${planText}. ${routeText}`, "ASSIGNMENT");
+});
+
+socket.on("ml_report", (data) => {
+    const survival = data.ml_report?.survival || {};
+    const risk = data.ml_report?.risk || {};
+    appendLogEntry("ML REPORT", `Startup model comparison loaded. Survival models: ${Object.keys(survival).join(", ")}; Risk models: ${Object.keys(risk).join(", ")}.`, "ASSIGNMENT");
 });
 
 socket.on("event_triggered", (data) => {

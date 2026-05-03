@@ -5,8 +5,12 @@ import csv
 import os
 from typing import Dict, List, Tuple
 
-import matplotlib.pyplot as plt
 import numpy as np
+
+try:
+    import matplotlib.pyplot as plt
+except Exception:  # pragma: no cover - optional plotting dependency
+    plt = None
 
 from csp import compare_backtracks, priority_score, solve_csp
 from environment import CellType, Environment, Victim
@@ -36,6 +40,8 @@ def print_grid(env: Environment, agents: Dict[str, Tuple[int, int]]) -> None:
 
 def route_visualization(env: Environment, path: List[Tuple[int, int]], scenario: str) -> None:
     """Render a static matplotlib overlay of the selected route."""
+    if plt is None:
+        return
     os.makedirs(RESULTS_DIR, exist_ok=True)
     color_map = {
         CellType.SAFE: (0.7, 0.9, 0.7),
@@ -84,7 +90,7 @@ def _victim_features(env: Environment, victim: Victim, time_since: float) -> Lis
 def _priority_list(env: Environment, ml: MLModel) -> List[Victim]:
     for victim in env.victims:
         victim.survival_prob = ml.predict_survival(_victim_features(env, victim, 5.0))
-    return sorted(env.victims, key=priority_score, reverse=True)
+    return sorted(env.victims, key=lambda victim: priority_score(victim, ml, env), reverse=True)
 
 
 def _build_pending(env: Environment, ml: MLModel, rescued: set) -> List[Victim]:
@@ -109,6 +115,8 @@ def _write_backtracks(path: str, backtracks: Dict[str, int]) -> None:
 
 
 def _plot_bar(values: Dict[str, float], title: str, output_path: str) -> None:
+    if plt is None:
+        return
     fig, ax = plt.subplots(figsize=(6, 4))
     labels = list(values.keys())
     ax.bar(labels, values.values(), color="#4c72b0")
@@ -121,6 +129,8 @@ def _plot_bar(values: Dict[str, float], title: str, output_path: str) -> None:
 
 
 def _plot_confusion_matrices(metrics: Dict[str, Dict[str, object]], output_path: str) -> None:
+    if plt is None:
+        return
     fig, axes = plt.subplots(1, 2, figsize=(8, 3.5))
     for ax, (model_name, report) in zip(axes, metrics.items()):
         cm = np.array(report.confusion)
@@ -156,6 +166,17 @@ def run_scenario(scenario: str) -> Dict[str, object]:
     logger = DecisionLogger(reset=True)
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
+    logger.log_event(
+        {
+            "event_type": "ML_REPORT",
+            "ml_report": ml.get_metrics_report(),
+            "scenario": scenario,
+            "step": 0,
+            "justification_text": "Startup model comparison report.",
+            "trigger_reason": "startup_model_report",
+        }
+    )
+
     comparison: Dict[str, SearchResult] = {}
     start = env.ambulances[0].pos
     goal = env.victims[0].pos
@@ -165,7 +186,7 @@ def run_scenario(scenario: str) -> Dict[str, object]:
             result = search(env, start, goal, algo, ml, fuzzy, alpha)
             comparison[key] = result
 
-    assignments_result = solve_csp(env, use_mrv=True, use_forward_checking=True)
+    assignments_result = solve_csp(env, ml, use_mrv=True, use_forward_checking=True)
     refined_assignment = hill_climb_assignments(
         assignments_result.assignment, env, ml, fuzzy
     )
@@ -178,6 +199,7 @@ def run_scenario(scenario: str) -> Dict[str, object]:
             "victim_priority_list": [v.victim_id for v in victim_priority],
             "justification_text": "Priority based on severity and survival probability.",
             "scenario": scenario,
+            "step": 0,
         }
     )
     logger.log_event(
@@ -186,6 +208,12 @@ def run_scenario(scenario: str) -> Dict[str, object]:
             "assignment_plan": _assignment_plan(refined_assignment),
             "justification_text": "CSP assignment with MRV+FC and hill climbing refinement.",
             "scenario": scenario,
+            "trigger_reason": "scenario_init",
+            "victim_priority_list": [
+                {"victim_id": victim.victim_id, "priority": round(priority_score(victim, ml, env), 4)}
+                for victim in victim_priority
+            ],
+            "step": 0,
         }
     )
 
@@ -220,10 +248,16 @@ def run_scenario(scenario: str) -> Dict[str, object]:
                     {
                         "event_type": "ASSIGNMENT",
                         "assignment_plan": _assignment_plan(
-                            solve_csp(env, use_mrv=True, use_forward_checking=True).assignment
+                                solve_csp(env, ml, use_mrv=True, use_forward_checking=True).assignment
                         ),
                         "justification_text": "CSP reassigned due to new victim.",
                         "scenario": scenario,
+                        "trigger_reason": "new_victim_detected",
+                        "victim_priority_list": [
+                            {"victim_id": victim.victim_id, "priority": round(priority_score(victim, ml, env), 4)}
+                            for victim in _priority_list(env, ml)
+                        ],
+                        "step": step,
                     }
                 )
 
@@ -233,11 +267,20 @@ def run_scenario(scenario: str) -> Dict[str, object]:
             logger.log_event(
                 {
                     "event_type": "REPLAN",
+                    "algorithm": "astar",
                     "victim_id": victim.victim_id,
                     "old_route_cost": result.total_cost,
                     "new_route_cost": replanned.total_cost,
                     "trigger_reason": trigger_reason or "dynamic_event",
                     "scenario": scenario,
+                    "chosen_path": replanned.path,
+                    "alpha_used": alpha,
+                    "time_cost": replanned.total_cost,
+                    "risk_cost": replanned.risk_score,
+                    "frontier_sizes": replanned.frontier_sizes,
+                    "optimality_ratio": replanned.optimality_ratio,
+                    "fuzzy_risk_along_path": 0.0,
+                    "step": step,
                 }
             )
             result = replanned
@@ -252,14 +295,18 @@ def run_scenario(scenario: str) -> Dict[str, object]:
         logger.log_event(
             {
                 "event_type": "ROUTE_SELECTION",
+                    "algorithm": "astar",
                 "victim_id": victim.victim_id,
                 "chosen_path": result.path,
                 "alpha_used": alpha,
                 "time_cost": result.total_cost,
                 "risk_cost": result.risk_score,
                 "frontier_sizes": result.frontier_sizes,
+                "optimality_ratio": result.optimality_ratio,
+                "fuzzy_risk_along_path": 0.0,
                 "justification_text": _route_justification(victim, alpha),
                 "scenario": scenario,
+                "step": step,
             }
         )
         logger.log_event(
@@ -268,6 +315,8 @@ def run_scenario(scenario: str) -> Dict[str, object]:
                 "victim_id": victim.victim_id,
                 "updated_survival_prob": updated_survival,
                 "scenario": scenario,
+                "assignment_plan": _assignment_plan(refined_assignment),
+                "step": step,
             }
         )
 
