@@ -15,6 +15,7 @@ from logger import LOG_PATH, DecisionLogger
 from ml_model import MLModel
 from search import dijkstra, edge_cost, search
 from main import run_scenario
+from app import GlobalState
 
 
 def test_environment_initialization():
@@ -32,6 +33,16 @@ def test_environment_dynamic_events():
     events = env.update(4)
     assert any(event[0] == "new_victim" for event in events)
     assert len(env.victims) == 6
+
+
+def test_severity_to_kits_policy():
+    env = Environment("A")
+    victim_map = {v.victim_id: v for v in env.victims}
+    assert victim_map["V1"].kits_needed == 2
+    assert victim_map["V2"].kits_needed == 2
+    assert victim_map["V3"].kits_needed == 1
+    assert victim_map["V4"].kits_needed == 1
+    assert victim_map["V5"].kits_needed == 0
 
 
 def test_search_algorithms_return_valid_paths():
@@ -145,3 +156,47 @@ def test_replan_log_contains_costs():
     assert replans[0].get("old_route_cost") is not None
     assert replans[0].get("new_route_cost") is not None
     assert replans[0].get("trigger_reason") == "road_block"
+
+
+def test_assignment_deduction_critical_plus_moderate_uses_three_kits():
+    gs = GlobalState()
+    gs.init_scenario("A")
+    assert gs.env is not None
+    before = gs.env.medical_kits
+
+    ok, committed = gs._deduct_kits_for_victims(["V1", "V3"], "test_assignment")
+    assert ok
+    assert set(committed) == {"V1", "V3"}
+    assert gs.env.medical_kits == before - 3
+
+
+def test_resource_exhaustion_logs_every_csp_cycle_when_zero_kits():
+    gs = GlobalState()
+    gs.logger = DecisionLogger(reset=True)
+    gs.init_scenario("A")
+    assert gs.env is not None
+    gs.env.medical_kits = 0
+
+    gs.solve_csp_with_tracking()
+    gs.solve_csp_with_tracking()
+
+    with open(LOG_PATH, "r", encoding="utf-8") as f:
+        entries = json.load(f)
+    violations = [
+        e
+        for e in entries
+        if e.get("event_type") == "CONSTRAINT_VIOLATION"
+        and e.get("outcome") == "resource_exhaustion"
+    ]
+    assert len(violations) >= 2
+
+
+def test_state_snapshot_exposes_latest_csp_backtracks():
+    gs = GlobalState()
+    gs.init_scenario("A")
+    result = gs.solve_csp_with_tracking(use_mrv=True, use_forward_checking=True)
+    assert result is not None
+    assert gs.latest_csp_backtracks == result.backtracks
+
+    snapshot = gs.get_state_snapshot()
+    assert snapshot["csp_backtracks"] == result.backtracks

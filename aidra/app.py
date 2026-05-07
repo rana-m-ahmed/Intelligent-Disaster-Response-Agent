@@ -56,6 +56,8 @@ class GlobalState:
         self.ambulance_capacity = 2
         self.detour_threshold = 1.5
         self.ml_report_emitted = False
+        self.latest_csp_backtracks = 0
+        self.committed_kit_victims: set = set()
 
     def log_event(self, payload: Dict[str, Any]) -> None:
         payload = dict(payload)
@@ -133,6 +135,88 @@ class GlobalState:
                 manhattan(ambulance.pos, victim.pos) for ambulance in self.env.ambulances
             )
         return (-self._severity_rank(victim.severity), nearest_distance, victim.kits_needed, victim.victim_id)
+
+    @staticmethod
+    def _kits_for_severity(severity: str) -> int:
+        return {"critical": 2, "moderate": 1, "minor": 0}.get(severity, 1)
+
+    def _kits_needed_for_victim(self, victim: Victim) -> int:
+        return self._kits_for_severity(victim.severity)
+
+    def _log_resource_exhaustion(self, trigger_reason: str) -> None:
+        if not self.env:
+            return
+        self.log_event(
+            {
+                "event_type": "CONSTRAINT_VIOLATION",
+                "trigger_reason": trigger_reason,
+                "module": "csp",
+                "outcome": "resource_exhaustion",
+                "justification_text": "Resource exhaustion constraint violation: medical kits are depleted (0).",
+                "assignment_plan": dict(self.active_assignments),
+                "victim_priority_list": self.get_priority_list(),
+            }
+        )
+
+    def _log_insufficient_kits(self, victim_id: str, required: int, available: int, trigger_reason: str) -> None:
+        self.log_event(
+            {
+                "event_type": "CONSTRAINT_VIOLATION",
+                "victim_id": victim_id,
+                "trigger_reason": trigger_reason,
+                "module": "csp",
+                "outcome": "insufficient_kits",
+                "justification_text": (
+                    f"Constraint violation: cannot assign {victim_id}; required kits={required}, "
+                    f"available kits={available}."
+                ),
+                "assignment_plan": dict(self.active_assignments),
+                "victim_priority_list": self.get_priority_list(),
+            }
+        )
+
+    def _deduct_kits_for_victims(
+        self,
+        victim_ids: List[str],
+        trigger_reason: str,
+    ) -> Tuple[bool, List[str]]:
+        if not self.env:
+            return False, []
+        victim_map = {victim.victim_id: victim for victim in self.env.victims}
+        newly_committed = [victim_id for victim_id in victim_ids if victim_id not in self.committed_kit_victims]
+        required = 0
+        for victim_id in newly_committed:
+            victim = victim_map.get(victim_id)
+            if victim:
+                required += self._kits_needed_for_victim(victim)
+
+        if required > self.env.medical_kits:
+            primary = newly_committed[0] if newly_committed else ""
+            self._log_insufficient_kits(primary, required, self.env.medical_kits, trigger_reason)
+            if self.env.medical_kits == 0:
+                self._log_resource_exhaustion(trigger_reason)
+            return False, []
+
+        self.env.medical_kits -= required
+        for victim_id in newly_committed:
+            self.committed_kit_victims.add(victim_id)
+
+        if self.env.medical_kits == 0:
+            self._log_resource_exhaustion(trigger_reason)
+        return True, newly_committed
+
+    def solve_csp_with_tracking(
+        self,
+        use_mrv: bool = True,
+        use_forward_checking: bool = True,
+    ):
+        if not self.env:
+            return None
+        if self.env.medical_kits == 0:
+            self._log_resource_exhaustion("csp_cycle")
+        result = solve_csp(self.env, self.ml, use_mrv=use_mrv, use_forward_checking=use_forward_checking)
+        self.latest_csp_backtracks = result.backtracks
+        return result
 
     def _reset_trip_state(self, ambulance_id: str) -> None:
         self.ambulance_trip_victims.pop(ambulance_id, None)
@@ -253,6 +337,15 @@ class GlobalState:
             self.current_alpha,
             queue=queue,
         )
+        accepted, _committed = self._deduct_kits_for_victims(
+            list(trip.get("victim_ids", [])),
+            trigger_reason="dispatch_assignment",
+        )
+        if not accepted:
+            queue.pop(0)
+            self.rescue_queues[ambulance_id] = queue
+            return self._dispatch_next_queue_target(ambulance_id)
+
         consumed_ids = set(trip.get("victim_ids", []))
         self.rescue_queues[ambulance_id] = [victim_id for victim_id in queue if victim_id not in consumed_ids]
 
@@ -434,6 +527,8 @@ class GlobalState:
             self.ambulance_trip_dropoff = {}
             self.ambulance_loads = {}
             self.ml_report_emitted = False
+            self.latest_csp_backtracks = 0
+            self.committed_kit_victims = set()
             for amb in self.env.ambulances:
                 self.ambulance_routes[amb.agent_id] = []
                 self.ambulance_progress[amb.agent_id] = 0
@@ -510,7 +605,7 @@ class GlobalState:
             "csp_assignment": self.get_csp_assignment_snapshot(),
             "medical_kits": self.env.medical_kits if self.env else 0,
             "medical_kits_capacity": 10,
-            "csp_backtracks": 0,
+            "csp_backtracks": self.latest_csp_backtracks,
             "ambulance_loads": self.ambulance_loads if self.env else {},
             "ambulance_capacity": self.ambulance_capacity,
             "algorithm": self.current_algorithm,
@@ -546,7 +641,9 @@ class GlobalState:
     def get_assignment_plan(self) -> Dict[str, str]:
         if not self.env:
             return {}
-        csp_result = solve_csp(self.env, self.ml)
+        csp_result = self.solve_csp_with_tracking()
+        if csp_result is None:
+            return {}
         vars_to_ambulance: Dict[str, str] = {}
         for idx, amb in enumerate(self.env.ambulances, start=1):
             vars_to_ambulance[f"ambulance_{idx}"] = amb.agent_id
@@ -615,7 +712,9 @@ def _ml_report_payload() -> Dict[str, Any]:
 def _assignment_summary_for_event() -> Dict[str, List[str]]:
     if not global_state.env:
         return {}
-    csp_result = solve_csp(global_state.env, global_state.ml)
+    csp_result = global_state.solve_csp_with_tracking()
+    if csp_result is None:
+        return {}
     return {resource: list(victims) for resource, victims in csp_result.assignment.items() if victims}
 
 
@@ -694,6 +793,13 @@ def handle_plan_route(data: Dict[str, Any]) -> None:
         )
 
     result = global_state._build_trip_route(assigned_ambulance, victim, algorithm, alpha, queue=[victim_id])
+    accepted, _committed = global_state._deduct_kits_for_victims(
+        list(result.get("victim_ids", [])),
+        trigger_reason="manual_assignment",
+    )
+    if not accepted:
+        emit("state_update", global_state.get_state_snapshot(), broadcast=True)
+        return
 
     justify = _generate_justification(victim, algorithm, alpha, result["cost"])
 
@@ -759,7 +865,9 @@ def handle_plan_full_rescue(data: Dict[str, Any]) -> None:
 
     # Keep CSP solve for telemetry/contract visibility, but execute full rescue using
     # a complete queue so the run continues beyond the first assigned victims.
-    csp_result = solve_csp(global_state.env, global_state.ml, use_mrv=True, use_forward_checking=True)
+    csp_result = global_state.solve_csp_with_tracking(use_mrv=True, use_forward_checking=True)
+    if csp_result is None:
+        return
     validate_assignment(csp_result.assignment, global_state.env, allow_partial=True)
     full_plan = global_state.build_full_rescue_plan(algorithm, alpha)
     full_assignment_plan = full_plan["assignment_plan"]

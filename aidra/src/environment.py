@@ -55,11 +55,11 @@ class Environment:
 
     def _init_victims(self) -> None:
         baseline = [
-            ("V1", (1, 2), "critical", 4),
-            ("V2", (2, 7), "critical", 4),
-            ("V3", (7, 3), "moderate", 2),
-            ("V4", (8, 8), "moderate", 2),
-            ("V5", (4, 4), "minor", 1),
+            ("V1", (1, 2), "critical", 2),
+            ("V2", (2, 7), "critical", 2),
+            ("V3", (7, 3), "moderate", 1),
+            ("V4", (8, 8), "moderate", 1),
+            ("V5", (4, 4), "minor", 0),
         ]
         self.victims = [Victim(*v) for v in baseline]
         for victim in self.victims:
@@ -136,5 +136,5 @@ class Environment:
 
     @staticmethod
     def _kits_for_severity(severity: str) -> int:
-        mapping = {"critical": 4, "moderate": 2, "minor": 1}
+        mapping = {"critical": 2, "moderate": 1, "minor": 0}
         return mapping.get(severity, 1)
