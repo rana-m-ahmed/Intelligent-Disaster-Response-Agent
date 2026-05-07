@@ -80,11 +80,13 @@ def _neighborhood_stats(env: Environment, pos: GridPos) -> Dict[str, float]:
 def _cell_penalty(env: Environment, pos: GridPos, ml_model: MLModel, fuzzy: FuzzyRisk) -> float:
     cell = env.grid[pos[0]][pos[1]]
     if cell != CellType.RISK:
-        return 0.0
+        return 0.0, 0.0
     ml_risk = ml_model.predict_risk(_cell_features(env, pos))
     neighborhood = _neighborhood_stats(env, pos)
-    fuzzy_risk = fuzzy.compute_risk_weight(neighborhood["block_prob"], neighborhood["hazard_rate"])
-    return 1.0 + ((ml_risk + fuzzy_risk) / 2.0)
+    fuzzy_weight = fuzzy.compute_risk_weight(neighborhood["block_prob"], neighborhood["hazard_rate"])
+    # return tuple-like info via a simple combined value for legacy callers
+    # but primarily callers should compute the multiplicative factor
+    return ml_risk, fuzzy_weight
 
 
 def edge_cost(
@@ -98,10 +100,14 @@ def edge_cost(
     base_move_cost = 1.0
     if env.grid[pos[0]][pos[1]] == CellType.BLOCKED:
         return math.inf
-    penalty = _cell_penalty(env, pos, ml_model, fuzzy)
+    # obtain ml risk and fuzzy weight
+    ml_risk, fuzzy_weight = _cell_penalty(env, pos, ml_model, fuzzy)
+    # CCP formula: cost = travel_time * (1 + alpha * ML_risk * fuzzy_weight)
     if math.isinf(alpha):
-        return base_move_cost + penalty
-    return base_move_cost + (alpha * penalty)
+        factor = 1.0 + (ml_risk * fuzzy_weight)
+    else:
+        factor = 1.0 + (alpha * ml_risk * fuzzy_weight)
+    return base_move_cost * factor
 
 
 def compute_path_cost(
@@ -115,7 +121,8 @@ def compute_path_cost(
     total = 0.0
     risk = 0.0
     for pos in path[1:]:
-        risk += _cell_penalty(env, pos, ml_model, fuzzy)
+        ml_risk, fuzzy_weight = _cell_penalty(env, pos, ml_model, fuzzy)
+        risk += ml_risk
         total += edge_cost(env, pos, ml_model, fuzzy, alpha)
     return total, risk
 
@@ -132,18 +139,20 @@ def search(
     ml_model: MLModel,
     fuzzy: FuzzyRisk,
     alpha: float,
+    use_heuristic: bool = True,
 ) -> SearchResult:
     """Run BFS, DFS, Greedy Best-First, or A* and return a SearchResult."""
     algo = algorithm.lower()
     if algo not in {"bfs", "dfs", "greedy", "astar"}:
         raise ValueError(f"Unsupported algorithm: {algorithm}")
     start_time = time.perf_counter()
-    result = _run_search_core(env, start, goal, algo, ml_model, fuzzy, alpha)
+    result = _run_search_core(env, start, goal, algo, ml_model, fuzzy, alpha, use_heuristic)
     if algo == "bfs":
         optimality_ratio = 1.0
     else:
-        bfs_baseline = _run_search_core(env, start, goal, "bfs", ml_model, fuzzy, alpha)
-        optimality_ratio = result.total_cost / max(bfs_baseline.total_cost, 1e-9)
+        # Compare against A* baseline (heuristic-enabled) per CCP guidance
+        astar_baseline = _run_search_core(env, start, goal, "astar", ml_model, fuzzy, alpha, True)
+        optimality_ratio = result.total_cost / max(astar_baseline.total_cost, 1e-9)
     runtime_sec = time.perf_counter() - start_time
     return SearchResult(
         path=result.path,
@@ -164,6 +173,7 @@ def _run_search_core(
     ml_model: MLModel,
     fuzzy: FuzzyRisk,
     alpha: float,
+    use_heuristic: bool = True,
 ) -> SearchResult:
     frontier_sizes: List[int] = []
     nodes_expanded = 0
@@ -254,7 +264,9 @@ def _run_search_core(
                 best_costs[nxt] = new_cost
                 came_from[nxt] = current
                 counter += 1
-                priority = new_cost + manhattan(nxt, goal)
+                # include heuristic only when allowed (Dijkstra / alpha=0 should disable if requested)
+                heuristic = manhattan(nxt, goal) if use_heuristic else 0.0
+                priority = new_cost + heuristic
                 heapq.heappush(frontier, (priority, new_cost, counter, nxt))
             frontier_sizes.append(len(frontier))
 

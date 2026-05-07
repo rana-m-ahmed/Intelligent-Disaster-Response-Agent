@@ -825,34 +825,22 @@ def handle_step_simulation() -> None:
             coords, _severity = payload
             new_victim = global_state.env.victims[-1]
             global_state.refresh_victim_survival_probabilities()
-            full_plan = global_state.reallocate_full_rescue(global_state.current_algorithm, global_state.current_alpha)
-            assignment_plan = full_plan["assignment_plan"]
-            for amb in global_state.env.ambulances:
-                if not global_state.ambulance_routes.get(amb.agent_id):
-                    global_state._dispatch_next_queue_target(amb.agent_id)
+            # Note: For scenario-scheduled events, do NOT auto-trigger full rescue plan.
+            # User must explicitly request via "Plan Full Rescue" button.
+            assignment_plan = global_state.get_assignment_plan()
             global_state.log_event(
                 {
                     "event_type": "ASSIGNMENT",
                     "trigger_reason": "scenario_event",
                     "victim_id": new_victim.victim_id,
-                    "victim_priority_list": full_plan["victim_priority_list"],
+                    "victim_priority_list": global_state.get_priority_list(),
                     "assignment_plan": assignment_plan,
-                    "justification_text": f"Scenario event added {new_victim.victim_id} at {coords}; CSP reallocation computed.",
+                    "justification_text": f"Scenario event added {new_victim.victim_id} at {coords}; user can manually replan.",
                 }
             )
             emit(
                 "victim_added",
                 {"victim": new_victim.victim_id, "assignment_plan": assignment_plan},
-                broadcast=True,
-            )
-            emit(
-                "full_rescue_planned",
-                {
-                    "assignment_plan": assignment_plan,
-                    "victim_priority_list": full_plan["victim_priority_list"],
-                    "route_summary": full_plan["route_summary"],
-                    "trigger_reason": "scenario_event",
-                },
                 broadcast=True,
             )
 

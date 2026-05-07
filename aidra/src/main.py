@@ -147,11 +147,41 @@ def _plot_confusion_matrices(metrics: Dict[str, Dict[str, object]], output_path:
 
 
 def _route_justification(victim: Victim, alpha: float) -> str:
+    # legacy shim - kept for compatibility but prefer _detailed_route_justification
     if alpha == 0.0:
         return f"Critical victim {victim.victim_id}: alpha=0 for fastest rescue."
     if alpha == float("inf"):
         return f"High risk near {victim.victim_id}: alpha=inf to avoid hazards."
     return f"Victim {victim.victim_id}: alpha=1 for balanced time and risk."
+
+
+def _detailed_route_justification(victim: Victim, result: SearchResult, alpha: float) -> str:
+    """Return justification text that includes numeric time and risk values."""
+    alpha_label = "inf" if alpha == float("inf") else str(alpha)
+    return (
+        f"Rescue {victim.victim_id}: time={result.total_cost:.2f}, "
+        f"risk={result.risk_score:.2f}, alpha={alpha_label}"
+    )
+
+
+def _neighborhood_stats(env: Environment, pos: Tuple[int, int]) -> Dict[str, float]:
+    rows = range(max(0, pos[0] - 1), min(env.size, pos[0] + 2))
+    cols = range(max(0, pos[1] - 1), min(env.size, pos[1] + 2))
+    total = 0
+    blocked = 0
+    risky = 0
+    for r in rows:
+        for c in cols:
+            total += 1
+            cell = env.grid[r][c]
+            if cell == CellType.BLOCKED:
+                blocked += 1
+            elif cell == CellType.RISK:
+                risky += 1
+    return {
+        "block_prob": blocked / max(total, 1),
+        "hazard_rate": risky / max(total, 1),
+    }
 
 
 def _assignment_plan(assignments: Dict[str, List[str]]) -> Dict[str, List[str]]:
@@ -221,16 +251,47 @@ def run_scenario(scenario: str) -> Dict[str, object]:
     total_time = 0.0
     risk_exposure = 0.0
     nodes_expanded = {k: v.nodes_expanded for k, v in comparison.items()}
-    current_pos = env.ambulances[0].pos
+    # track current positions per resource so we dispatch the correct vehicle
+    positions = {
+        "ambulance_1": env.ambulances[0].pos,
+        "ambulance_2": env.ambulances[1].pos,
+        "rescue_team": env.rescue_team.pos,
+    }
     step = 0
     rescued: set = set()
     pending = _build_pending(env, ml, rescued)
 
+    # create victim->resource mapping from refined CSP assignment
+    victim_to_resource: Dict[str, str] = {}
+    for resource, victims in refined_assignment.items():
+        for v_id in victims:
+            victim_to_resource[v_id] = resource
+
     while pending:
         victim = pending.pop(0)
-        victim_risk = ml.predict_risk(_victim_features(env, victim, 5.0))
-        alpha = choose_alpha(victim.severity, victim_risk)
-        result = search(env, current_pos, victim.pos, "astar", ml, fuzzy, alpha)
+        # determine assigned resource and start position
+        assigned_resource = victim_to_resource.get(victim.victim_id, "ambulance_1")
+        start_pos = positions.get(assigned_resource, env.ambulances[0].pos)
+
+        # Compute three trade-off paths: fast (alpha=0), balanced (alpha=1), safe (alpha=inf)
+        path_fast = search(env, start_pos, victim.pos, "astar", ml, fuzzy, 0.0)
+        path_balanced = search(env, start_pos, victim.pos, "astar", ml, fuzzy, 1.0)
+        path_safe = search(env, start_pos, victim.pos, "astar", ml, fuzzy, float("inf"))
+
+        # determine fuzzy threshold from local neighborhood
+        nb = _neighborhood_stats(env, victim.pos)
+        fuzzy_threshold = fuzzy.compute_risk_weight(nb["block_prob"], nb["hazard_rate"])
+
+        # selection logic: prefer fast if risk acceptable, otherwise safe if cost penalty is small, else balanced
+        if path_fast.risk_score <= fuzzy_threshold:
+            result = path_fast
+            chosen_alpha = 0.0
+        elif path_safe.total_cost <= 1.2 * path_fast.total_cost:
+            result = path_safe
+            chosen_alpha = float("inf")
+        else:
+            result = path_balanced
+            chosen_alpha = 1.0
 
         step += 1
         events = env.update(step)
@@ -262,8 +323,8 @@ def run_scenario(scenario: str) -> Dict[str, object]:
                 )
 
         if env.is_replan_needed():
-            replan_start = result.path[1] if len(result.path) > 1 else current_pos
-            replanned = search(env, replan_start, victim.pos, "astar", ml, fuzzy, alpha)
+            replan_start = result.path[1] if len(result.path) > 1 else start_pos
+            replanned = search(env, replan_start, victim.pos, "astar", ml, fuzzy, chosen_alpha)
             logger.log_event(
                 {
                     "event_type": "REPLAN",
@@ -274,7 +335,7 @@ def run_scenario(scenario: str) -> Dict[str, object]:
                     "trigger_reason": trigger_reason or "dynamic_event",
                     "scenario": scenario,
                     "chosen_path": replanned.path,
-                    "alpha_used": alpha,
+                    "alpha_used": chosen_alpha,
                     "time_cost": replanned.total_cost,
                     "risk_cost": replanned.risk_score,
                     "frontier_sizes": replanned.frontier_sizes,
@@ -283,13 +344,46 @@ def run_scenario(scenario: str) -> Dict[str, object]:
                     "step": step,
                 }
             )
+            # if replanned is significantly more expensive (>20%), evaluate switching vehicles
+            if replanned.total_cost > 1.2 * result.total_cost:
+                # pick alternate ambulance if available
+                alt = None
+                if assigned_resource == "ambulance_1":
+                    alt = "ambulance_2"
+                elif assigned_resource == "ambulance_2":
+                    alt = "ambulance_1"
+                if alt is not None:
+                    logger.log_event(
+                        {
+                            "event_type": "REPLAN_EVALUATE_SWITCH",
+                            "from": assigned_resource,
+                            "to": alt,
+                            "victim_id": victim.victim_id,
+                            "old_cost": result.total_cost,
+                            "new_cost": replanned.total_cost,
+                            "ratio": replanned.total_cost / max(result.total_cost, 1.0),
+                            "step": step,
+                            "scenario": scenario,
+                        }
+                    )
             result = replanned
-            current_pos = replan_start
+            # update vehicle position to the replan start so the next search begins from correct cell
+            positions[assigned_resource] = replan_start
+            # also reflect on env agents
+            if assigned_resource == "ambulance_1":
+                env.ambulances[0].pos = positions[assigned_resource]
+            elif assigned_resource == "ambulance_2":
+                env.ambulances[1].pos = positions[assigned_resource]
+            else:
+                env.rescue_team.pos = positions[assigned_resource]
             env.clear_replan_flag()
 
         victims_saved += 1
         total_time += result.total_cost
         risk_exposure += result.risk_score
+
+        # decrement kits when a victim is rescued and account kit usage
+        env.medical_kits = max(0, env.medical_kits - victim.kits_needed)
 
         updated_survival = ml.predict_survival(_victim_features(env, victim, 10.0))
         logger.log_event(
@@ -298,13 +392,13 @@ def run_scenario(scenario: str) -> Dict[str, object]:
                     "algorithm": "astar",
                 "victim_id": victim.victim_id,
                 "chosen_path": result.path,
-                "alpha_used": alpha,
+                "alpha_used": chosen_alpha,
                 "time_cost": result.total_cost,
                 "risk_cost": result.risk_score,
                 "frontier_sizes": result.frontier_sizes,
                 "optimality_ratio": result.optimality_ratio,
                 "fuzzy_risk_along_path": 0.0,
-                "justification_text": _route_justification(victim, alpha),
+                "justification_text": _detailed_route_justification(victim, result, chosen_alpha),
                 "scenario": scenario,
                 "step": step,
             }
@@ -321,12 +415,20 @@ def run_scenario(scenario: str) -> Dict[str, object]:
         )
 
         rescued.add(victim.victim_id)
-        current_pos = victim.pos
+        # update the dispatched vehicle position to victim location
+        positions[assigned_resource] = victim.pos
+        if assigned_resource == "ambulance_1":
+            env.ambulances[0].pos = victim.pos
+        elif assigned_resource == "ambulance_2":
+            env.ambulances[1].pos = victim.pos
+        else:
+            env.rescue_team.pos = victim.pos
+        # display currently dispatched agent and rescue team
         print_grid(
             env,
             {
-                "A": current_pos,
-                "T": env.rescue_team.pos,
+                "A": positions.get(assigned_resource, positions["ambulance_1"]),
+                "T": positions.get("rescue_team", env.rescue_team.pos),
             },
         )
 
@@ -396,7 +498,7 @@ def run_scenario(scenario: str) -> Dict[str, object]:
     path_opt_ratio = avg_cost / max(optimal_cost, 1.0)
     victim_map = {v.victim_id: v for v in env.victims}
     kit_used = sum(victim_map[v_id].kits_needed for v_id in rescued)
-    resource_util = min(1.0, victims_saved / 4.0)
+    resource_util = kit_used / 10.0
     kpi = {
         "victims_saved": victims_saved,
         "average_rescue_time": avg_time,

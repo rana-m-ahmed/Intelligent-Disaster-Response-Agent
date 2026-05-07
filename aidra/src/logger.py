@@ -52,6 +52,10 @@ def _apply_defaults(payload: Dict[str, Any]) -> Dict[str, Any]:
         "fuzzy_risk_along_path": 0.0,
         "step": 0,
         "ml_report": {},
+        "reallocation_made": False,
+        "realocation_made": False,
+        "module": "",
+        "outcome": "",
     }
     for key, value in defaults.items():
         payload.setdefault(key, value)
