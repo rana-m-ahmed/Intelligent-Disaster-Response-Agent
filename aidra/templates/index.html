@@ -24,6 +24,18 @@
                 <div class="kpi-value" id="risk-exposure">0.0</div>
             </div>
             <div class="kpi-box">
+                <div class="kpi-label">Medical Kits</div>
+                <div class="kpi-value" id="medical-kits">10/10</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label">CSP Backtracks</div>
+                <div class="kpi-value" id="csp-backtracks">0</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label">Ambulance Load</div>
+                <div class="kpi-value" id="ambulance-loads">A1: 0/2 | A2: 0/2</div>
+            </div>
+            <div class="kpi-box">
                 <div class="kpi-label">Trade-off Banner</div>
                 <div class="kpi-value" id="tradeoff-banner">Balanced approach</div>
             </div>
@@ -62,7 +74,28 @@
         </div>
 
         <!-- Center: 3D Visualisation -->
-        <div class="center-panel" id="canvas-container"></div>
+        <div class="center-panel">
+            <div id="canvas-container"></div>
+            <div class="scene-overlay" id="scene-overlay" aria-hidden="true">
+                <div class="scene-legend">
+                    <div class="scene-legend-title">Scene Legend</div>
+                    <div class="legend-section">
+                        <div class="legend-section-title">Victim Severity</div>
+                        <div class="legend-item"><span class="legend-swatch legend-critical"></span>Critical</div>
+                        <div class="legend-item"><span class="legend-swatch legend-moderate"></span>Moderate</div>
+                        <div class="legend-item"><span class="legend-swatch legend-minor"></span>Minor</div>
+                    </div>
+                    <div class="legend-section">
+                        <div class="legend-section-title">Landmarks</div>
+                        <div class="legend-item"><span class="legend-marker legend-flag"></span>Rescue Base</div>
+                        <div class="legend-item"><span class="legend-marker legend-cross"></span>Medical Centre A/B</div>
+                    </div>
+                </div>
+                <div class="scene-label scene-label-base" id="rescue-base-label">Rescue Base</div>
+                <div class="scene-label scene-label-medical" id="medical-centre-a-label">Medical Centre A</div>
+                <div class="scene-label scene-label-medical" id="medical-centre-b-label">Medical Centre B</div>
+            </div>
+        </div>
 
         <!-- Right Panel: Decision Log -->
         <div class="right-panel">

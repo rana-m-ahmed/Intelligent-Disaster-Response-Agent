@@ -6,6 +6,7 @@ let ambulanceMeshes = {};
 let victimMeshes = {};
 let rescuedVictimMeshes = {};
 let medCenterMeshes = [];
+let rescueBaseMesh = null;
 let routeLines = {};
 let routeDrawAnimations = {};
 let pendingRouteAnimations = {};
@@ -16,7 +17,12 @@ let stepIntervalId = null;
 let blockModeActive = false;
 let hoveredCellKey = null;
 
-const routeColors = [0x00ff99, 0x00ccff, 0xff99ff, 0xffaa00];
+const routeColors = [0x5bd1ff, 0x00ccff, 0xff99ff, 0xffaa00];
+const victimSeverityColors = {
+    critical: 0xe24b4a,
+    moderate: 0xef9f27,
+    minor: 0x639922,
+};
 
 function init() {
     const container = document.getElementById("canvas-container");
@@ -35,10 +41,10 @@ function init() {
     controls.target.set(5, 0, 5);
     controls.distance = 25;
 
-    const ambientLight = new THREE.AmbientLight(0x00ff99, 0.3);
+    const ambientLight = new THREE.AmbientLight(0xbfd7ff, 0.3);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x00ffff, 0.6);
+    const directionalLight = new THREE.DirectionalLight(0xeaf4ff, 0.6);
     directionalLight.position.set(10, 20, 10);
     directionalLight.castShadow = true;
     scene.add(directionalLight);
@@ -287,6 +293,7 @@ function animate() {
     });
 
     controls.update();
+    updateLandmarkLabels();
     renderer.render(scene, camera);
 }
 
@@ -313,14 +320,14 @@ function raycastGrid(event) {
 function createGridCell(x, y, cellType) {
     const size = 0.9;
     const colorMap = {
-        SAFE: 0x0a3a1f,
+        SAFE: 0x1b2a44,
         RISK: 0x5a1f0f,
         BLOCKED: 0x1f0a0a,
         MED_CENTER: 0x0a1f5a,
         VICTIM: 0x5a5a0a,
     };
     const emissiveMap = {
-        SAFE: 0x00ff99,
+        SAFE: 0x2f5d9b,
         RISK: 0xff6600,
         BLOCKED: 0xff0000,
         MED_CENTER: 0x00ffff,
@@ -344,7 +351,7 @@ function createAmbulance() {
     const group = new THREE.Group();
     const body = new THREE.Mesh(
         new THREE.BoxGeometry(0.3, 0.2, 0.3),
-        new THREE.MeshStandardMaterial({ color: 0x00ff99 })
+        new THREE.MeshStandardMaterial({ color: 0x5bd1ff })
     );
     group.add(body);
 
@@ -359,20 +366,113 @@ function createAmbulance() {
 }
 
 function createVictim(severity) {
-    const severityColor = { critical: 0xff0000, moderate: 0xffaa00, minor: 0xffff00 };
-    const color = severityColor[severity] || 0xffff00;
+    const color = victimSeverityColors[severity] || victimSeverityColors.minor;
+    const geometry = THREE.CapsuleGeometry
+        ? new THREE.CapsuleGeometry(0.11, 0.18, 4, 8)
+        : new THREE.CylinderGeometry(0.11, 0.11, 0.34, 8);
     const mesh = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(0.15, 3),
-        new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.4 })
+        geometry,
+        new THREE.MeshStandardMaterial({
+            color,
+            emissive: color,
+            emissiveIntensity: 0.22,
+            transparent: false,
+            opacity: 1,
+            roughness: 0.45,
+            metalness: 0.08,
+        })
     );
     mesh.castShadow = true;
     return mesh;
 }
 
+function createRescueBaseMarker() {
+    const group = new THREE.Group();
+    const base = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.22, 0.22, 0.06, 24),
+        new THREE.MeshStandardMaterial({ color: 0x4f8bff, emissive: 0x4f8bff, emissiveIntensity: 0.35 })
+    );
+    base.position.y = 0.03;
+    group.add(base);
+
+    const pole = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, 0.95, 16),
+        new THREE.MeshStandardMaterial({ color: 0xdce9ff, emissive: 0x1d4ed8, emissiveIntensity: 0.18 })
+    );
+    pole.position.set(-0.07, 0.52, 0);
+    group.add(pole);
+
+    const flag = new THREE.Mesh(
+        new THREE.BoxGeometry(0.52, 0.28, 0.05),
+        new THREE.MeshStandardMaterial({ color: 0x4f8bff, emissive: 0x4f8bff, emissiveIntensity: 0.45 })
+    );
+    flag.position.set(0.18, 0.82, 0);
+    flag.rotation.z = -0.06;
+    group.add(flag);
+
+    return group;
+}
+
+function createMedicalCenterMarker() {
+    const group = new THREE.Group();
+    const material = new THREE.MeshStandardMaterial({ color: 0x66d96d, emissive: 0x66d96d, emissiveIntensity: 0.45 });
+    const horizontal = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.08, 0.08), material);
+    const vertical = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.48), material);
+    const base = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.16, 0.16, 0.04, 20),
+        new THREE.MeshStandardMaterial({ color: 0x1f6b24, emissive: 0x66d96d, emissiveIntensity: 0.2 })
+    );
+    base.position.y = 0.02;
+    group.add(base);
+    group.add(horizontal);
+    group.add(vertical);
+    return group;
+}
+
+function projectWorldPosition(position, heightOffset = 0.7) {
+    const container = document.getElementById("canvas-container");
+    if (!container || !camera) {
+        return null;
+    }
+    const projected = new THREE.Vector3(position[0], heightOffset, position[1]).project(camera);
+    const x = ((projected.x + 1) / 2) * container.clientWidth;
+    const y = ((-projected.y + 1) / 2) * container.clientHeight;
+    return {
+        x: Math.max(12, Math.min(container.clientWidth - 12, x)),
+        y: Math.max(12, Math.min(container.clientHeight - 12, y)),
+        visible: projected.z >= -1 && projected.z <= 1,
+    };
+}
+
+function updateLandmarkLabels() {
+    if (!gameState) {
+        return;
+    }
+
+    const labels = [
+        { id: "rescue-base-label", position: gameState.rescue_team?.pos, offset: 1.05 },
+        { id: "medical-centre-a-label", position: gameState.med_centers?.[0], offset: 0.95 },
+        { id: "medical-centre-b-label", position: gameState.med_centers?.[1], offset: 0.95 },
+    ];
+
+    labels.forEach((entry) => {
+        const label = document.getElementById(entry.id);
+        if (!label || !entry.position) {
+            return;
+        }
+        const projected = projectWorldPosition(entry.position, entry.offset);
+        if (!projected) {
+            return;
+        }
+        label.style.transform = `translate(-50%, -50%) translate(${projected.x}px, ${projected.y}px)`;
+        label.style.opacity = projected.visible ? "1" : "0.6";
+    });
+}
+
 function createRescuedMarker() {
     return new THREE.Mesh(
         new THREE.CylinderGeometry(0.2, 0.2, 0.02, 24),
-        new THREE.MeshStandardMaterial({ color: 0x00ff99, emissive: 0x00ff99, emissiveIntensity: 0.9 })
+        new THREE.MeshStandardMaterial({ color: 0x5bd1ff, emissive: 0x5bd1ff, emissiveIntensity: 0.9 })
     );
 }
 
@@ -417,6 +517,13 @@ function formatSurvivalList(victims) {
         .join(" | ");
 }
 
+function formatAmbulanceLoads(ambulances) {
+    if (!ambulances || ambulances.length === 0) {
+        return "A1: 0/2 | A2: 0/2";
+    }
+    return ambulances.map((amb) => `${amb.id}: ${Number(amb.load ?? 0)}/${Number(amb.capacity ?? 2)}`).join(" | ");
+}
+
 socket.on("state_update", (data) => {
     gameState = data;
 
@@ -450,10 +557,6 @@ socket.on("state_update", (data) => {
 
         const victimMesh = createVictim(victim.severity);
         victimMesh.position.set(x, 0.5, y);
-        if (victimMesh.material) {
-            victimMesh.material.transparent = true;
-            victimMesh.material.opacity = 0.35 + 0.65 * Math.max(0, Math.min(1, victim.survival_prob ?? 0.5));
-        }
         victimMesh.userData = {
             victimId: victim.id,
             survival: victim.survival_prob,
@@ -510,11 +613,20 @@ socket.on("state_update", (data) => {
         }
     });
 
+    if (rescueBaseMesh) {
+        scene.remove(rescueBaseMesh);
+        rescueBaseMesh = null;
+    }
     medCenterMeshes.forEach((mesh) => scene.remove(mesh));
     medCenterMeshes = [];
+    if (data.rescue_team?.pos) {
+        rescueBaseMesh = createRescueBaseMarker();
+        rescueBaseMesh.position.set(data.rescue_team.pos[0], 0.05, data.rescue_team.pos[1]);
+        scene.add(rescueBaseMesh);
+    }
     (data.med_centers || []).forEach((center) => {
-        const med = createMedCenter();
-        med.position.set(center[0], 0.3, center[1]);
+        const med = createMedicalCenterMarker();
+        med.position.set(center[0], 0.05, center[1]);
         scene.add(med);
         medCenterMeshes.push(med);
     });
@@ -522,10 +634,14 @@ socket.on("state_update", (data) => {
     document.getElementById("victims-saved").textContent = `${data.rescued_victims}/${data.total_victims}`;
     document.getElementById("avg-time").textContent = data.avg_rescue_time > 0 ? `${data.avg_rescue_time.toFixed(2)}s` : "-";
     document.getElementById("risk-exposure").textContent = data.risk_exposure > 0 ? data.risk_exposure.toFixed(3) : "-";
+    document.getElementById("medical-kits").textContent = `${Number(data.medical_kits ?? 0)}/${Number(data.medical_kits_capacity ?? 10)}`;
+    document.getElementById("csp-backtracks").textContent = `${Number(data.csp_backtracks ?? 0)}`;
+    document.getElementById("ambulance-loads").textContent = formatAmbulanceLoads(data.ambulances || []);
     document.getElementById("csp-assignment").textContent = formatAssignmentPlan(data.csp_assignment);
     document.getElementById("victim-survival").textContent = formatSurvivalList((data.victims || []).filter((victim) => !victim.rescued));
     document.getElementById("alpha-value").textContent = parseFloat(document.getElementById("alpha-slider").value).toFixed(1);
     updateTradeoffBanner();
+    updateLandmarkLabels();
 });
 
 socket.on("route_planned", (data) => {
