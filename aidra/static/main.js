@@ -513,7 +513,7 @@ function formatSurvivalList(victims) {
         return "None";
     }
     return victims
-        .map((victim) => `${victim.id}:${Number(victim.survival_prob ?? 0).toFixed(2)}`)
+        .map((victim) => `${victim.id}:${Number(victim.survival_prob ?? 0).toFixed(3)}`)
         .join(" | ");
 }
 
