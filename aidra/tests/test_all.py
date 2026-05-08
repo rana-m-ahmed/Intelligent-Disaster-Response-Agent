@@ -5,9 +5,13 @@ import sys
 import pytest
 
 SRC_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
+ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if SRC_PATH not in sys.path:
     sys.path.insert(0, SRC_PATH)
+if ROOT_PATH not in sys.path:
+    sys.path.insert(0, ROOT_PATH)
 
+import app as aidra_app
 from csp import compare_backtracks, solve_csp
 from environment import CellType, Environment
 from fuzzy import FuzzyRisk
@@ -76,6 +80,30 @@ def test_alpha_zero_matches_dijkstra():
     a_star = search(env, env.ambulances[0].pos, env.victims[0].pos, "astar", ml, fuzzy, 0.0)
     dij = dijkstra(env, env.ambulances[0].pos, env.victims[0].pos, ml, fuzzy)
     assert pytest.approx(a_star.total_cost, rel=1e-5) == dij.total_cost
+
+
+def test_search_algorithms_diverge_on_branching_grid():
+    env = Environment("A")
+    for row in range(env.size):
+        for col in range(env.size):
+            env.grid[row][col] = CellType.SAFE
+    start = (0, 0)
+    goal = (0, 3)
+    env.grid[start[0]][start[1]] = CellType.MED_CENTER
+    ml = MLModel()
+    fuzzy = FuzzyRisk()
+
+    bfs_path = search(env, start, goal, "bfs", ml, fuzzy, 1.0).path
+    dfs_path = search(env, start, goal, "dfs", ml, fuzzy, 1.0).path
+    greedy_path = search(env, start, goal, "greedy", ml, fuzzy, 1.0).path
+    astar_path = search(env, start, goal, "astar", ml, fuzzy, 1.0).path
+
+    assert bfs_path == [(0, 0), (0, 1), (0, 2), (0, 3)]
+    assert greedy_path == [(0, 0), (0, 1), (0, 2), (0, 3)]
+    assert astar_path == [(0, 0), (0, 1), (0, 2), (0, 3)]
+    assert dfs_path != bfs_path
+    assert dfs_path[0] == start
+    assert dfs_path[-1] == goal
 
 
 def test_csp_constraints_and_backtracks():
@@ -200,3 +228,76 @@ def test_state_snapshot_exposes_latest_csp_backtracks():
 
     snapshot = gs.get_state_snapshot()
     assert snapshot["csp_backtracks"] == result.backtracks
+
+
+def test_blocked_multi_victim_reroute_preserves_next_victim_target(monkeypatch):
+    gs = GlobalState()
+    gs.init_scenario("A")
+    assert gs.env is not None
+
+    monkeypatch.setattr(aidra_app, "emit", lambda *args, **kwargs: None)
+    aidra_app.global_state = gs
+
+    gs.env.victims = [
+        aidra_app.Victim("V1", (0, 8), "minor", 0),
+        aidra_app.Victim("V2", (0, 6), "minor", 0),
+    ]
+    for row in range(gs.env.size):
+        for col in range(gs.env.size):
+            if gs.env.grid[row][col] != CellType.MED_CENTER:
+                gs.env.grid[row][col] = CellType.SAFE
+    for victim in gs.env.victims:
+        gs.env.grid[victim.pos[0]][victim.pos[1]] = CellType.VICTIM
+
+    gs.rescue_queues = {"A1": ["V1", "V2"], "A2": []}
+    gs.ambulance_routes = {"A1": [], "A2": []}
+    gs.ambulance_progress = {"A1": 0, "A2": 0}
+    gs.active_assignments = {}
+    gs.route_costs = {}
+    gs.assignment_started_at = {}
+    gs.route_risk_scores = []
+    gs.ambulance_trip_victims = {}
+    gs.ambulance_trip_waypoints = {}
+    gs.ambulance_trip_stage_index = {}
+    gs.ambulance_trip_dropoff = {}
+    gs.ambulance_loads = {"A1": 0, "A2": 0}
+    gs.committed_kit_victims = set()
+    gs.current_algorithm = "astar"
+    gs.current_alpha = 0.0
+
+    trip = gs._dispatch_next_queue_target("A1")
+    assert trip is not None
+    assert gs.ambulance_trip_victims["A1"] == ["V1", "V2"]
+
+    first_victim = next(v for v in gs.env.victims if v.victim_id == "V1")
+    first_index = gs.ambulance_routes["A1"].index(first_victim.pos)
+    gs.ambulance_progress["A1"] = first_index
+    gs.env.ambulances[0].pos = first_victim.pos
+    gs.ambulance_trip_stage_index["A1"] = 1
+
+    block_cell = gs.ambulance_routes["A1"][first_index + 1]
+    aidra_app._auto_replan_for_block(block_cell, trigger_reason="test_block")
+
+    assert gs.ambulance_routes["A1"]
+    assert gs.ambulance_routes["A1"][-1] == (0, 0)
+    assert (0, 6) in gs.ambulance_routes["A1"]
+    assert gs.ambulance_routes["A1"].index((0, 6)) < gs.ambulance_routes["A1"].index((0, 0))
+    assert gs.ambulance_trip_waypoints["A1"] == [(0, 8), (0, 6), (0, 0)]
+    assert gs.rescued_victims == set()
+
+
+def test_simulated_annealing_near_optimal():
+    env = Environment("A")
+    ml = MLModel()
+    fuzzy = FuzzyRisk()
+    start = env.ambulances[0].pos
+    goal = env.victims[0].pos
+    # baseline A*
+    astar_res = search(env, start, goal, "astar", ml, fuzzy, 1.0)
+    sa_params = {"temperature": 1.0, "cooling_rate": 0.995, "max_iterations": 500}
+    sa_res = search(env, start, goal, "simulated_annealing", ml, fuzzy, 1.0, True, sa_params)
+    assert sa_res.path[0] == start
+    assert sa_res.path[-1] == goal
+    assert all(env.grid[p[0]][p[1]] != CellType.BLOCKED for p in sa_res.path)
+    # within 20% of A* cost
+    assert sa_res.total_cost <= 1.2 * astar_res.total_cost

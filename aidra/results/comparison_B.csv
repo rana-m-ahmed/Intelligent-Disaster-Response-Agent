@@ -2,9 +2,9 @@ algorithm,total_cost,nodes_expanded
 bfs_alpha_0.0,8.0,44
 bfs_alpha_1.0,8.0,44
 bfs_alpha_inf,8.0,44
-dfs_alpha_0.0,8.0,79
-dfs_alpha_1.0,8.0,79
-dfs_alpha_inf,8.0,79
+dfs_alpha_0.0,78.0,79
+dfs_alpha_1.0,78.0,79
+dfs_alpha_inf,78.0,79
 greedy_alpha_0.0,8.0,9
 greedy_alpha_1.0,8.0,9
 greedy_alpha_inf,8.0,9

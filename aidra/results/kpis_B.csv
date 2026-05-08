@@ -1,7 +1,7 @@
 kpi,value
 victims_saved,5
 average_rescue_time,5.6
-path_optimality_ratio,1.0
+path_optimality_ratio,3.1875
 resource_util_rate,0.6
 risk_exposure_score,0.0
 kit_usage,6

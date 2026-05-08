@@ -122,7 +122,7 @@ class MLModel:
         if self._fallback or self.survival_model is None:
             return 0.5
         proba = self.survival_model.predict_proba([features])[0][1]
-        return float(max(0.0, min(1.0, proba)))
+        return float(max(1e-3, min(1.0, proba)))
 
     def predict_risk(self, features: List[float]) -> float:
         """Predict risk level normalized to [0, 1]."""

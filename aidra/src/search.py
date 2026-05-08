@@ -3,6 +3,7 @@ from __future__ import annotations
 import heapq
 import math
 import time
+import random
 from collections import deque
 from dataclasses import dataclass
 from typing import Deque, Dict, List, Optional, Tuple
@@ -140,13 +141,17 @@ def search(
     fuzzy: FuzzyRisk,
     alpha: float,
     use_heuristic: bool = True,
+    algorithm_params: dict | None = None,
 ) -> SearchResult:
     """Run BFS, DFS, Greedy Best-First, or A* and return a SearchResult."""
     algo = algorithm.lower()
-    if algo not in {"bfs", "dfs", "greedy", "astar"}:
+    if algo not in {"bfs", "dfs", "greedy", "astar", "simulated_annealing"}:
         raise ValueError(f"Unsupported algorithm: {algorithm}")
     start_time = time.perf_counter()
-    result = _run_search_core(env, start, goal, algo, ml_model, fuzzy, alpha, use_heuristic)
+    if algo == "simulated_annealing":
+        result = _simulated_annealing_search(env, start, goal, ml_model, fuzzy, alpha, algorithm_params or {})
+    else:
+        result = _run_search_core(env, start, goal, algo, ml_model, fuzzy, alpha, use_heuristic)
     if algo == "bfs":
         optimality_ratio = 1.0
     else:
@@ -174,117 +179,179 @@ def _run_search_core(
     fuzzy: FuzzyRisk,
     alpha: float,
     use_heuristic: bool = True,
+    algorithm_params: dict | None = None,
 ) -> SearchResult:
     frontier_sizes: List[int] = []
     nodes_expanded = 0
-    came_from: Dict[GridPos, Optional[GridPos]] = {start: None}
 
     if algo == "bfs":
-        frontier: Deque[GridPos] = deque([start])
+        frontier: Deque[Tuple[GridPos, List[GridPos]]] = deque([(start, [start])])
         visited = {start}
         while frontier:
-            current = frontier.popleft()
+            current, path = frontier.popleft()
             nodes_expanded += 1
             if current == goal:
-                break
+                total_cost = _hop_count(path)
+                return SearchResult(path, total_cost, 0.0, nodes_expanded, frontier_sizes, 1.0, 0.0)
             for nxt in _neighbors(env, current):
-                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
-                    continue
                 if nxt in visited:
                     continue
                 visited.add(nxt)
-                came_from[nxt] = current
-                frontier.append(nxt)
+                frontier.append((nxt, path + [nxt]))
             frontier_sizes.append(len(frontier))
+
     elif algo == "dfs":
-        frontier = [start]
+        frontier: List[Tuple[GridPos, List[GridPos]]] = [(start, [start])]
         visited = set()
         while frontier:
-            current = frontier.pop()
+            current, path = frontier.pop()
             if current in visited:
                 continue
             visited.add(current)
             nodes_expanded += 1
             if current == goal:
-                break
+                total_cost = _hop_count(path)
+                return SearchResult(path, total_cost, 0.0, nodes_expanded, frontier_sizes, 1.0, 0.0)
             for nxt in reversed(_neighbors(env, current)):
-                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
-                    continue
                 if nxt in visited:
                     continue
-                if nxt not in came_from:
-                    came_from[nxt] = current
-                frontier.append(nxt)
+                frontier.append((nxt, path + [nxt]))
             frontier_sizes.append(len(frontier))
+
     elif algo == "greedy":
-        frontier = []
+        frontier: List[Tuple[float, int, GridPos, List[GridPos]]] = []
         counter = 0
-        heapq.heappush(frontier, (manhattan(start, goal), counter, start))
+        heapq.heappush(frontier, (manhattan(start, goal), counter, start, [start]))
         visited = {start}
         while frontier:
-            _, _, current = heapq.heappop(frontier)
+            _, _, current, path = heapq.heappop(frontier)
             nodes_expanded += 1
             if current == goal:
-                break
+                total_cost = _hop_count(path)
+                return SearchResult(path, total_cost, 0.0, nodes_expanded, frontier_sizes, 1.0, 0.0)
             ordered_neighbors = sorted(
                 _neighbors(env, current),
                 key=lambda nxt: (manhattan(nxt, goal), abs(nxt[1] - goal[1]), abs(nxt[0] - goal[0])),
             )
             for nxt in ordered_neighbors:
-                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
-                    continue
                 if nxt in visited:
                     continue
                 visited.add(nxt)
-                came_from[nxt] = current
                 counter += 1
-                heapq.heappush(frontier, (manhattan(nxt, goal), counter, nxt))
+                heapq.heappush(frontier, (manhattan(nxt, goal), counter, nxt, path + [nxt]))
             frontier_sizes.append(len(frontier))
+
     else:
-        frontier = []
+        frontier: List[Tuple[float, float, int, GridPos, List[GridPos]]] = []
         counter = 0
-        heapq.heappush(frontier, (0.0, 0.0, counter, start))
+        heapq.heappush(frontier, (0.0, 0.0, counter, start, [start]))
         best_costs = {start: 0.0}
         closed = set()
         while frontier:
-            _, current_g, _, current = heapq.heappop(frontier)
+            _, current_g, _, current, path = heapq.heappop(frontier)
             if current in closed:
                 continue
             closed.add(current)
             nodes_expanded += 1
             if current == goal:
-                break
+                total_cost, risk_score = compute_path_cost(env, path, ml_model, fuzzy, alpha)
+                return SearchResult(path, total_cost, risk_score, nodes_expanded, frontier_sizes, 1.0, 0.0)
             for nxt in _neighbors(env, current):
-                if env.grid[nxt[0]][nxt[1]] == CellType.BLOCKED:
-                    continue
                 step_cost = edge_cost(env, nxt, ml_model, fuzzy, alpha)
                 new_cost = current_g + step_cost
                 if nxt in best_costs and new_cost >= best_costs[nxt]:
                     continue
                 best_costs[nxt] = new_cost
-                came_from[nxt] = current
                 counter += 1
-                # include heuristic only when allowed (Dijkstra / alpha=0 should disable if requested)
                 heuristic = manhattan(nxt, goal) if use_heuristic else 0.0
                 priority = new_cost + heuristic
-                heapq.heappush(frontier, (priority, new_cost, counter, nxt))
+                heapq.heappush(frontier, (priority, new_cost, counter, nxt, path + [nxt]))
             frontier_sizes.append(len(frontier))
 
-    path = _reconstruct_path(came_from, start, goal)
-    if algo in {"bfs", "dfs", "greedy"}:
-        total_cost = _hop_count(path)
-        risk_score = 0.0
-    else:
-        total_cost, risk_score = compute_path_cost(env, path, ml_model, fuzzy, alpha)
-    return SearchResult(
-        path=path,
-        total_cost=total_cost,
-        risk_score=risk_score,
-        nodes_expanded=nodes_expanded,
-        frontier_sizes=frontier_sizes,
-        optimality_ratio=1.0,
-        runtime_sec=0.0,
-    )
+    return SearchResult([start], 0.0, 0.0, nodes_expanded, frontier_sizes, 1.0, 0.0)
+
+
+def _simulated_annealing_search(
+    env: Environment,
+    start: GridPos,
+    goal: GridPos,
+    ml_model: MLModel,
+    fuzzy: FuzzyRisk,
+    alpha: float,
+    params: dict,
+) -> SearchResult:
+    """A practical Simulated Annealing search that perturbs A* subpaths.
+
+    Strategy:
+    - Seed with an A* path (heuristic-enabled).
+    - Repeatedly select two interior indices i<j and replan the subpath between them
+      using A*; accept according to Metropolis criterion.
+    - Keep best path found and return its SearchResult.
+    """
+    temperature = float(params.get("temperature", 1.0))
+    cooling_rate = float(params.get("cooling_rate", 0.995))
+    max_iterations = int(params.get("max_iterations", 1000))
+
+    start_time = time.perf_counter()
+    # Baseline using A*
+    baseline = _run_search_core(env, start, goal, "astar", ml_model, fuzzy, alpha, True, params)
+    best_path = list(baseline.path)
+    best_cost, best_risk = compute_path_cost(env, best_path, ml_model, fuzzy, alpha)
+    current_path = list(best_path)
+    current_cost = best_cost
+
+    nodes_expanded = baseline.nodes_expanded
+    frontier_sizes: List[int] = []
+
+    if len(current_path) <= 2:
+        runtime_sec = time.perf_counter() - start_time
+        return SearchResult(best_path, best_cost, best_risk, nodes_expanded, frontier_sizes, 1.0, runtime_sec)
+
+    for it in range(max_iterations):
+        # pick two indices i<j avoiding endpoints
+        i = random.randint(1, max(1, len(current_path) - 2))
+        j = random.randint(i + 1, len(current_path) - 1)
+
+        a = current_path[i - 1]
+        b = current_path[j]
+
+        # replan subpath from a to b
+        subresult = _run_search_core(env, a, b, "astar", ml_model, fuzzy, alpha, True, params)
+        nodes_expanded += subresult.nodes_expanded
+        if not subresult.path or subresult.path[0] != a or subresult.path[-1] != b:
+            # skip invalid perturbation
+            temperature *= cooling_rate
+            continue
+
+        new_path = current_path[: i] + subresult.path + current_path[j + 1 :]
+        new_cost, new_risk = compute_path_cost(env, new_path, ml_model, fuzzy, alpha)
+
+        delta = new_cost - current_cost
+        accept = False
+        if delta <= 0:
+            accept = True
+        else:
+            prob = math.exp(-delta / max(1e-12, temperature))
+            if random.random() < prob:
+                accept = True
+
+        if accept:
+            current_path = new_path
+            current_cost = new_cost
+            # update best if improved
+            if new_cost < best_cost:
+                best_cost = new_cost
+                best_risk = new_risk
+                best_path = list(new_path)
+
+        temperature *= cooling_rate
+        if temperature <= 1e-12:
+            break
+
+    runtime_sec = time.perf_counter() - start_time
+    # Compare against baseline for optimality ratio
+    optimality_ratio = best_cost / max(baseline.total_cost, 1e-9)
+    return SearchResult(best_path, best_cost, best_risk, nodes_expanded, frontier_sizes, optimality_ratio, runtime_sec)
 
 
 def dijkstra(

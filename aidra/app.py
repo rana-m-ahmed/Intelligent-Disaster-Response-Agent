@@ -35,6 +35,7 @@ class GlobalState:
         self.alpha = 1.0
         self.current_algorithm = "astar"
         self.current_alpha = 1.0
+        self.current_algorithm_params: Dict[str, Any] = {}
         self.ambulance_routes: Dict[str, List[Tuple[int, int]]] = {}
         self.ambulance_progress: Dict[str, int] = {}
         self.rescued_victims: set = set()
@@ -127,6 +128,35 @@ class GlobalState:
             else:
                 stitched.extend(path[1:])
         return stitched
+
+    def _build_waypoint_route(
+        self,
+        start: Tuple[int, int],
+        waypoints: List[Tuple[int, int]],
+        algorithm: str,
+        alpha: float,
+    ) -> Dict[str, Any]:
+        if not self.env or not waypoints:
+            return {"path": [], "cost": 0.0, "risk": 0.0, "segments": []}
+
+        current_pos = start
+        segments: List[List[Tuple[int, int]]] = []
+        total_cost = 0.0
+        total_risk = 0.0
+
+        for waypoint in waypoints:
+            result = search(self.env, current_pos, waypoint, algorithm, self.ml, self.fuzzy, alpha, True, self.current_algorithm_params)
+            segments.append(result.path)
+            total_cost += result.total_cost
+            total_risk += result.risk_score
+            current_pos = waypoint
+
+        return {
+            "path": self._stitch_paths(segments),
+            "cost": total_cost,
+            "risk": total_risk,
+            "segments": segments,
+        }
 
     def _victim_queue_key(self, victim: Victim) -> Tuple[int, int, int, str]:
         nearest_distance = 0
@@ -234,6 +264,23 @@ class GlobalState:
             return waypoints[stage_index]
         return waypoints[-1]
 
+    def _current_trip_target_victim(self, ambulance_id: str) -> Optional[Victim]:
+        if not self.env:
+            return None
+        waypoints = self.ambulance_trip_waypoints.get(ambulance_id, [])
+        stage_index = self.ambulance_trip_stage_index.get(ambulance_id, 0)
+        if not waypoints or stage_index >= len(waypoints) - 1:
+            return None
+        target_pos = waypoints[stage_index]
+        return next(
+            (
+                victim
+                for victim in self.env.victims
+                if victim.pos == target_pos and victim.victim_id not in self.rescued_victims
+            ),
+            None,
+        )
+
     def _advance_trip_stage(self, ambulance_id: str, current_pos: Tuple[int, int]) -> None:
         waypoints = self.ambulance_trip_waypoints.get(ambulance_id, [])
         if not waypoints:
@@ -260,7 +307,7 @@ class GlobalState:
         trip_victims = [primary_victim]
         consumed_ids = [primary_victim.victim_id]
 
-        first_leg = search(self.env, start, primary_victim.pos, algorithm, self.ml, self.fuzzy, alpha)
+        first_leg = search(self.env, start, primary_victim.pos, algorithm, self.ml, self.fuzzy, alpha, True, self.current_algorithm_params)
         segments: List[List[Tuple[int, int]]] = [first_leg.path]
         total_cost = first_leg.total_cost
         total_risk = first_leg.risk_score
@@ -275,8 +322,8 @@ class GlobalState:
                 None,
             )
             if next_victim and next_victim.victim_id not in self.rescued_victims:
-                direct_dropoff = search(self.env, current_pos, dropoff, algorithm, self.ml, self.fuzzy, alpha)
-                detour_leg = search(self.env, current_pos, next_victim.pos, algorithm, self.ml, self.fuzzy, alpha)
+                direct_dropoff = search(self.env, current_pos, dropoff, algorithm, self.ml, self.fuzzy, alpha, True, self.current_algorithm_params)
+                detour_leg = search(self.env, current_pos, next_victim.pos, algorithm, self.ml, self.fuzzy, alpha, True, self.current_algorithm_params)
                 if detour_leg.total_cost <= self.detour_threshold * max(direct_dropoff.total_cost, 1e-9):
                     trip_victims.append(next_victim)
                     consumed_ids.append(next_victim.victim_id)
@@ -286,7 +333,7 @@ class GlobalState:
                     current_pos = next_victim.pos
                     dropoff = self._nearest_med_center(current_pos)
 
-        drop_leg = search(self.env, current_pos, dropoff, algorithm, self.ml, self.fuzzy, alpha)
+        drop_leg = search(self.env, current_pos, dropoff, algorithm, self.ml, self.fuzzy, alpha, True, self.current_algorithm_params)
         segments.append(drop_leg.path)
         total_cost += drop_leg.total_cost
         total_risk += drop_leg.risk_score
@@ -420,7 +467,7 @@ class GlobalState:
             best_choice: Optional[Tuple[float, str, Any]] = None
             for amb in self.env.ambulances:
                 amb_id = amb.agent_id
-                result = search(self.env, cursor_positions[amb_id], victim.pos, algorithm, self.ml, self.fuzzy, alpha)
+                result = search(self.env, cursor_positions[amb_id], victim.pos, algorithm, self.ml, self.fuzzy, alpha, True, self.current_algorithm_params)
                 score = float(self._severity_rank(victim.severity)) * 100.0 - result.total_cost - manhattan(cursor_positions[amb_id], victim.pos)
                 choice = (score, amb_id, result)
                 if best_choice is None or choice[0] > best_choice[0]:
@@ -764,9 +811,11 @@ def handle_plan_route(data: Dict[str, Any]) -> None:
     victim_id = data.get("victim_id")
     algorithm = data.get("algorithm", "astar")
     alpha = data.get("alpha", 1.0)
+    algorithm_params = data.get("algorithm_params", {})
 
     global_state.current_algorithm = algorithm
     global_state.current_alpha = alpha
+    global_state.current_algorithm_params = algorithm_params or {}
 
     victim_map = {v.victim_id: v for v in global_state.env.victims}
     victim = victim_map.get(victim_id)
@@ -860,8 +909,10 @@ def handle_plan_full_rescue(data: Dict[str, Any]) -> None:
 
     algorithm = data.get("algorithm", global_state.current_algorithm)
     alpha = float(data.get("alpha", global_state.current_alpha))
+    algorithm_params = data.get("algorithm_params", {})
     global_state.current_algorithm = algorithm
     global_state.current_alpha = alpha
+    global_state.current_algorithm_params = algorithm_params or {}
 
     # Keep CSP solve for telemetry/contract visibility, but execute full rescue using
     # a complete queue so the run continues beyond the first assigned victims.
@@ -959,37 +1010,63 @@ def _auto_replan_for_block(coords: Tuple[int, int], trigger_reason: str) -> None
         )
         victim_id = global_state.active_assignments.get(amb_id) or _route_victim_id(old_route)
         victim = victims_by_id.get(victim_id) if victim_id else None
+        target_victim = global_state._current_trip_target_victim(amb_id)
         target_pos = global_state._current_trip_target(amb_id, old_route, progress)
-        if target_pos is None and victim:
+
+        waypoints = list(global_state.ambulance_trip_waypoints.get(amb_id, []))
+        stage_index = global_state.ambulance_trip_stage_index.get(amb_id, 0)
+        remaining_waypoints = waypoints[stage_index:] if waypoints else []
+
+        if remaining_waypoints:
+            target_pos = remaining_waypoints[0]
+            target_victim = next(
+                (
+                    v
+                    for v in global_state.env.victims
+                    if v.pos == target_pos and v.victim_id not in global_state.rescued_victims
+                ),
+                target_victim,
+            )
+        elif target_pos is None and target_victim:
+            target_pos = target_victim.pos
+        elif target_pos is None and victim:
             target_pos = victim.pos
         if target_pos is None:
             continue
 
-        if global_state.ambulance_loads.get(amb_id, 0) > 0:
-            dropoff = global_state.ambulance_trip_dropoff.get(amb_id)
-            if dropoff is not None:
-                target_pos = dropoff
-                waypoints = global_state.ambulance_trip_waypoints.get(amb_id, [])
-                if waypoints:
-                    global_state.ambulance_trip_stage_index[amb_id] = max(0, len(waypoints) - 1)
-
         start = global_state.get_current_pos(amb_id)
-        new_result = search(
-            global_state.env,
-            start,
-            target_pos,
-            global_state.current_algorithm,
-            global_state.ml,
-            global_state.fuzzy,
-            global_state.current_alpha,
-        )
+        if remaining_waypoints:
+            new_result = global_state._build_waypoint_route(
+                start,
+                remaining_waypoints,
+                global_state.current_algorithm,
+                global_state.current_alpha,
+            )
+        else:
+            route_result = search(
+                global_state.env,
+                start,
+                target_pos,
+                global_state.current_algorithm,
+                global_state.ml,
+                global_state.fuzzy,
+                global_state.current_alpha,
+                True,
+                global_state.current_algorithm_params,
+            )
+            new_result = {
+                "path": route_result.path,
+                "cost": route_result.total_cost,
+                "risk": route_result.risk_score,
+                "segments": [route_result.path],
+            }
 
-        target_label = victim.victim_id if victim and target_pos == victim.pos else "medical_centre"
+        target_label = target_victim.victim_id if target_victim else victim.victim_id if victim and target_pos == victim.pos else "medical_centre"
 
-        global_state.ambulance_routes[amb_id] = new_result.path
+        global_state.ambulance_routes[amb_id] = new_result["path"]
         global_state.ambulance_progress[amb_id] = 0
-        global_state.route_costs[amb_id] = new_result.total_cost
-        global_state.route_risk_scores.append(new_result.risk_score)
+        global_state.route_costs[amb_id] = new_result["cost"]
+        global_state.route_risk_scores.append(new_result["risk"])
 
         justify = (
             f"Route for {amb_id} to {target_label} crossed blocked cell {coords}; "
@@ -999,18 +1076,18 @@ def _auto_replan_for_block(coords: Tuple[int, int], trigger_reason: str) -> None
             {
                 "event_type": "REPLAN",
                 "trigger_reason": "road_blocked",
-                "victim_id": victim.victim_id if victim else target_label,
-                "chosen_path": new_result.path,
+                "victim_id": target_label,
+                "chosen_path": new_result["path"],
                 "alpha_used": global_state.current_alpha,
-                "time_cost": new_result.total_cost,
-                "risk_cost": new_result.risk_score,
+                "time_cost": new_result["cost"],
+                "risk_cost": new_result["risk"],
                 "old_route_cost": old_route_cost,
-                "new_route_cost": new_result.total_cost,
+                "new_route_cost": new_result["cost"],
                 "victim_priority_list": global_state.get_priority_list(),
                 "assignment_plan": dict(global_state.active_assignments),
-                "frontier_sizes": new_result.frontier_sizes,
-                "optimality_ratio": new_result.optimality_ratio,
-                "fuzzy_risk_along_path": _path_fuzzy_risk(global_state.env, new_result.path),
+                "frontier_sizes": [],
+                "optimality_ratio": 1.0,
+                "fuzzy_risk_along_path": _path_fuzzy_risk(global_state.env, new_result["path"]),
                 "justification_text": justify,
             }
         )
@@ -1019,17 +1096,17 @@ def _auto_replan_for_block(coords: Tuple[int, int], trigger_reason: str) -> None
             "route_planned",
             {
                 "ambulance_id": amb_id,
-                "victim_id": victim.victim_id if victim else target_label,
+                "victim_id": target_label,
                 "algorithm": global_state.current_algorithm,
                 "alpha": global_state.current_alpha,
-                "path": new_result.path,
-                "cost": new_result.total_cost,
-                "risk_score": new_result.risk_score,
+                "path": new_result["path"],
+                "cost": new_result["cost"],
+                "risk_score": new_result["risk"],
                 "justification": justify,
                 "is_replan": True,
-                "optimality_ratio": new_result.optimality_ratio,
-                "fuzzy_risk_along_path": _path_fuzzy_risk(global_state.env, new_result.path),
-                "frontier_sizes": new_result.frontier_sizes,
+                "optimality_ratio": 1.0,
+                "fuzzy_risk_along_path": _path_fuzzy_risk(global_state.env, new_result["path"]),
+                "frontier_sizes": [],
             },
             broadcast=True,
         )

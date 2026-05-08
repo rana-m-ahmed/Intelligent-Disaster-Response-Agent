@@ -59,7 +59,17 @@
                 <option value="bfs">BFS</option>
                 <option value="dfs">DFS</option>
                 <option value="greedy">Greedy</option>
+                <option value="simulated_annealing">Simulated Annealing</option>
             </select>
+
+            <div id="sa-params" style="display:none; margin-top:8px;">
+                <label for="sa-temp">SA Temperature:</label>
+                <input type="number" id="sa-temp" class="control-input" step="0.1" value="1.0" min="0.0">
+                <label for="sa-cooling">Cooling Rate:</label>
+                <input type="number" id="sa-cooling" class="control-input" step="0.001" value="0.995" min="0.0" max="1.0">
+                <label for="sa-iters">Max Iterations:</label>
+                <input type="number" id="sa-iters" class="control-input" step="10" value="1000" min="1">
+            </div>
 
             <label for="alpha-slider">Risk Aversion (α):</label>
             <input type="range" id="alpha-slider" min="0" max="10" step="0.1" value="1" class="control-input">

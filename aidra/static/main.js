@@ -97,9 +97,28 @@ function init() {
     document.getElementById("btn-plan-full").addEventListener("click", () => {
         const algorithm = document.getElementById("algorithm-select").value;
         const alpha = parseFloat(document.getElementById("alpha-slider").value);
-        socket.emit("plan_full_rescue", { algorithm, alpha });
+        const algorithmParams = collectAlgorithmParams(algorithm);
+        socket.emit("plan_full_rescue", { algorithm, alpha, algorithm_params: algorithmParams });
         appendLogEntry("USER ACTION", `Planning full rescue with ${algorithm.toUpperCase()} (alpha=${alpha.toFixed(1)}).`, "ASSIGNMENT");
     });
+
+    document.getElementById("algorithm-select").addEventListener("change", (e) => {
+        const algo = e.target.value;
+        const saParams = document.getElementById("sa-params");
+        if (algo === "simulated_annealing") {
+            saParams.style.display = "block";
+        } else {
+            saParams.style.display = "none";
+        }
+    });
+
+    function collectAlgorithmParams(algorithm) {
+        if (algorithm !== "simulated_annealing") return {};
+        const t = parseFloat(document.getElementById("sa-temp").value) || 1.0;
+        const cooling = parseFloat(document.getElementById("sa-cooling").value) || 0.995;
+        const iters = parseInt(document.getElementById("sa-iters").value) || 1000;
+        return { temperature: t, cooling_rate: cooling, max_iterations: iters };
+    }
 
     document.getElementById("btn-block-mode").addEventListener("click", () => {
         blockModeActive = !blockModeActive;
@@ -178,7 +197,8 @@ function appendLogEntry(type, message, cssClass = "") {
 function emitPlanRoute(victimId) {
     const algorithm = document.getElementById("algorithm-select").value;
     const alpha = parseFloat(document.getElementById("alpha-slider").value);
-    socket.emit("plan_route", { victim_id: victimId, algorithm, alpha });
+    const algorithmParams = collectAlgorithmParams(algorithm);
+    socket.emit("plan_route", { victim_id: victimId, algorithm, alpha, algorithm_params: algorithmParams });
     appendLogEntry("USER ACTION", `Clicked ${victimId} - planning route with ${algorithm.toUpperCase()} (alpha=${alpha.toFixed(1)}).`, "ROUTE_SELECTION");
 }
 
