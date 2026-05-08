@@ -24,6 +24,14 @@
                 <div class="kpi-value" id="risk-exposure">0.0</div>
             </div>
             <div class="kpi-box">
+                <div class="kpi-label">Path Optimality Ratio</div>
+                <div class="kpi-value" id="path-optimality-ratio">1.000x</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label">Resource Utilization Rate</div>
+                <div class="kpi-value" id="resource-utilization-rate">0.0%</div>
+            </div>
+            <div class="kpi-box">
                 <div class="kpi-label">Medical Kits</div>
                 <div class="kpi-value" id="medical-kits">10/10</div>
             </div>
@@ -46,6 +54,14 @@
             <div class="kpi-box">
                 <div class="kpi-label">Victim Survival</div>
                 <div class="kpi-value" id="victim-survival">Loading...</div>
+            </div>
+
+            <div class="ml-panel" id="ml-panel">
+                <div class="ml-panel-header">
+                    <h3>ML Metrics</h3>
+                    <button type="button" class="ml-refresh-btn" id="btn-retrain-ml">Retrain Metrics</button>
+                </div>
+                <div id="ml-metrics-root" class="ml-metrics-root"></div>
             </div>
 
             <h3>Controls</h3>

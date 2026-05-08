@@ -181,9 +181,9 @@ class MLModel:
             preds = model.predict(X_test)
             report = ModelReport(
                 accuracy=accuracy_score(y_test, preds),
-                precision=precision_score(y_test, preds, zero_division=0),
-                recall=recall_score(y_test, preds, zero_division=0),
-                f1=f1_score(y_test, preds, zero_division=0),
+                precision=precision_score(y_test, preds, average="macro", zero_division=0),
+                recall=recall_score(y_test, preds, average="macro", zero_division=0),
+                f1=f1_score(y_test, preds, average="macro", zero_division=0),
                 confusion=confusion_matrix(y_test, preds).tolist(),
             )
             reports[name] = report

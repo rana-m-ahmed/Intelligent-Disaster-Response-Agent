@@ -53,6 +53,7 @@ class GlobalState:
         self.ambulance_trip_waypoints: Dict[str, List[Tuple[int, int]]] = {}
         self.ambulance_trip_stage_index: Dict[str, int] = {}
         self.ambulance_trip_dropoff: Dict[str, Tuple[int, int]] = {}
+        self.route_baseline_costs: Dict[str, float] = {}
         self.ambulance_loads: Dict[str, int] = {}
         self.ambulance_capacity = 2
         self.detour_threshold = 1.5
@@ -158,6 +159,33 @@ class GlobalState:
             "segments": segments,
         }
 
+    def _overall_path_optimality_ratio(self) -> float:
+        found_cost = 0.0
+        best_cost = 0.0
+        for ambulance_id, route_cost in self.route_costs.items():
+            if route_cost <= 0.0:
+                continue
+            found_cost += route_cost
+            best_cost += max(self.route_baseline_costs.get(ambulance_id, route_cost), 1e-9)
+        if found_cost <= 0.0 or best_cost <= 0.0:
+            return 1.0
+        return max(found_cost / best_cost, 1.0)
+
+    def _resource_utilization_snapshot(self) -> Dict[str, float]:
+        ambulance_total = len(self.env.ambulances) if self.env else 0
+        kits_capacity = 10
+        kits_consumed = max(0, kits_capacity - (self.env.medical_kits if self.env else kits_capacity))
+        ambulances_dispatched = sum(1 for route in self.ambulance_routes.values() if route)
+        teams_deployed = 1 if self.env else 0
+        resources_used = ambulances_dispatched + kits_consumed + teams_deployed
+        resources_available = ambulance_total + kits_capacity + 1
+        utilization_rate = (resources_used / max(resources_available, 1)) * 100.0
+        return {
+            "resources_used": float(resources_used),
+            "resources_available": float(resources_available),
+            "resource_utilization_rate": max(0.0, min(100.0, utilization_rate)),
+        }
+
     def _victim_queue_key(self, victim: Victim) -> Tuple[int, int, int, str]:
         nearest_distance = 0
         if self.env and self.env.ambulances:
@@ -253,6 +281,7 @@ class GlobalState:
         self.ambulance_trip_waypoints.pop(ambulance_id, None)
         self.ambulance_trip_stage_index.pop(ambulance_id, None)
         self.ambulance_trip_dropoff.pop(ambulance_id, None)
+        self.route_baseline_costs.pop(ambulance_id, None)
         self.ambulance_loads[ambulance_id] = 0
 
     def _current_trip_target(self, ambulance_id: str, route: List[Tuple[int, int]], progress: int) -> Optional[Tuple[int, int]]:
@@ -342,6 +371,12 @@ class GlobalState:
         self.ambulance_trip_waypoints[ambulance_id] = [victim.pos for victim in trip_victims] + [dropoff]
         self.ambulance_trip_stage_index[ambulance_id] = 0
         self.ambulance_trip_dropoff[ambulance_id] = dropoff
+        self.route_baseline_costs[ambulance_id] = self._build_waypoint_route(
+            start,
+            [victim.pos for victim in trip_victims] + [dropoff],
+            "astar",
+            alpha,
+        )["cost"]
         self.ambulance_loads[ambulance_id] = len(consumed_ids)
 
         return {
@@ -352,6 +387,7 @@ class GlobalState:
             "cost": total_cost,
             "risk": total_risk,
             "segments": segments,
+            "baseline_cost": self.route_baseline_costs[ambulance_id],
         }
 
     def _dispatch_next_queue_target(self, ambulance_id: str) -> Optional[Dict[str, Any]]:
@@ -400,8 +436,10 @@ class GlobalState:
         self.ambulance_progress[ambulance_id] = 0
         self.active_assignments[ambulance_id] = victim.victim_id
         self.route_costs[ambulance_id] = trip["cost"]
+        self.route_baseline_costs[ambulance_id] = trip.get("baseline_cost", trip["cost"])
         self.assignment_started_at[ambulance_id] = self.step_count
         self.route_risk_scores.append(trip["risk"])
+        optimality_ratio = round(trip["cost"] / max(trip.get("baseline_cost", trip["cost"]), 1e-9), 4)
 
         justification = (
             f"Auto-dispatched {ambulance_id} to {victim.victim_id} from the full rescue queue "
@@ -418,7 +456,7 @@ class GlobalState:
                 "algorithm": self.current_algorithm,
                 "justification_text": justification,
                 "frontier_sizes": [],
-                "optimality_ratio": 1.0,
+                "optimality_ratio": optimality_ratio,
                 "fuzzy_risk_along_path": _path_fuzzy_risk(self.env, trip["path"]),
                 "trigger_reason": "full_rescue_queue",
                 "victim_priority_list": self.get_priority_list(),
@@ -437,7 +475,7 @@ class GlobalState:
                 "risk_score": trip["risk"],
                 "justification": justification,
                 "is_replan": False,
-                "optimality_ratio": 1.0,
+                "optimality_ratio": optimality_ratio,
                 "fuzzy_risk_along_path": _path_fuzzy_risk(self.env, trip["path"]),
                 "frontier_sizes": [],
                 "load": trip.get("load", 1),
@@ -451,7 +489,7 @@ class GlobalState:
             "route_cost": round(trip["cost"], 3),
             "risk_cost": round(trip["risk"], 3),
             "priority": round(self._full_rescue_priority(victim), 4),
-            "optimality_ratio": 1.0,
+            "optimality_ratio": optimality_ratio,
         }
 
     def build_full_rescue_plan(self, algorithm: str, alpha: float) -> Dict[str, Any]:
@@ -572,6 +610,7 @@ class GlobalState:
             self.ambulance_trip_waypoints = {}
             self.ambulance_trip_stage_index = {}
             self.ambulance_trip_dropoff = {}
+            self.route_baseline_costs = {}
             self.ambulance_loads = {}
             self.ml_report_emitted = False
             self.latest_csp_backtracks = 0
@@ -634,6 +673,7 @@ class GlobalState:
         )
         avg_rescue_time_sec = avg_rescue_steps * 0.5
         risk_exposure = float(self.risk_steps)
+        resource_snapshot = self._resource_utilization_snapshot()
         return {
             "grid": self.get_grid_for_json(),
             "victims": self.get_victims_for_json(),
@@ -657,6 +697,11 @@ class GlobalState:
             "ambulance_capacity": self.ambulance_capacity,
             "algorithm": self.current_algorithm,
             "alpha": self.current_alpha,
+            "ml_report": self.ml.get_metrics_report(),
+            "path_optimality_ratio": self._overall_path_optimality_ratio(),
+            "resource_utilization_rate": resource_snapshot["resource_utilization_rate"],
+            "resources_used": resource_snapshot["resources_used"],
+            "resources_available": resource_snapshot["resources_available"],
         }
 
     def get_current_pos(self, ambulance_id: str) -> Tuple[int, int]:
@@ -754,6 +799,15 @@ def _ml_report_payload() -> Dict[str, Any]:
         "trigger_reason": "startup_model_report",
         "step": 0,
     }
+
+
+@socketio.on("retrain_ml")
+def handle_retrain_ml() -> None:
+    global_state.ml.train_models()
+    payload = global_state.get_ml_report_payload()
+    global_state.log_event(payload)
+    emit("ml_report", payload, broadcast=True)
+    emit("state_update", global_state.get_state_snapshot(), broadcast=True)
 
 
 def _assignment_summary_for_event() -> Dict[str, List[str]]:
@@ -856,8 +910,10 @@ def handle_plan_route(data: Dict[str, Any]) -> None:
     global_state.ambulance_progress[assigned_ambulance] = 0
     global_state.active_assignments[assigned_ambulance] = victim_id
     global_state.route_costs[assigned_ambulance] = result["cost"]
+    global_state.route_baseline_costs[assigned_ambulance] = result.get("baseline_cost", result["cost"])
     global_state.assignment_started_at[assigned_ambulance] = global_state.simulation_step
     global_state.route_risk_scores.append(result["risk"])
+    optimality_ratio = round(result["cost"] / max(result.get("baseline_cost", result["cost"]), 1e-9), 4)
 
     global_state.log_event(
         {
@@ -890,7 +946,7 @@ def handle_plan_route(data: Dict[str, Any]) -> None:
             "risk_score": result["risk"],
             "justification": justify,
             "is_replan": False,
-            "optimality_ratio": 1.0,
+            "optimality_ratio": optimality_ratio,
             "fuzzy_risk_along_path": _path_fuzzy_risk(global_state.env, result["path"]),
             "frontier_sizes": [],
             "load": result.get("load", 1),
@@ -928,6 +984,7 @@ def handle_plan_full_rescue(data: Dict[str, Any]) -> None:
     global_state.ambulance_progress = {amb.agent_id: 0 for amb in global_state.env.ambulances}
     global_state.active_assignments = {}
     global_state.route_costs = {}
+    global_state.route_baseline_costs = {}
     global_state.assignment_started_at = {}
     global_state.route_risk_scores = []
     global_state.rescue_queues = {
@@ -1066,7 +1123,28 @@ def _auto_replan_for_block(coords: Tuple[int, int], trigger_reason: str) -> None
         global_state.ambulance_routes[amb_id] = new_result["path"]
         global_state.ambulance_progress[amb_id] = 0
         global_state.route_costs[amb_id] = new_result["cost"]
+        if remaining_waypoints:
+            baseline_cost = global_state._build_waypoint_route(
+                start,
+                remaining_waypoints,
+                "astar",
+                global_state.current_alpha,
+            )["cost"]
+        else:
+            baseline_cost = search(
+                global_state.env,
+                start,
+                target_pos,
+                "astar",
+                global_state.ml,
+                global_state.fuzzy,
+                global_state.current_alpha,
+                True,
+                global_state.current_algorithm_params,
+            ).total_cost
+        global_state.route_baseline_costs[amb_id] = baseline_cost
         global_state.route_risk_scores.append(new_result["risk"])
+        optimality_ratio = round(new_result["cost"] / max(baseline_cost, 1e-9), 4)
 
         justify = (
             f"Route for {amb_id} to {target_label} crossed blocked cell {coords}; "
@@ -1086,7 +1164,7 @@ def _auto_replan_for_block(coords: Tuple[int, int], trigger_reason: str) -> None
                 "victim_priority_list": global_state.get_priority_list(),
                 "assignment_plan": dict(global_state.active_assignments),
                 "frontier_sizes": [],
-                "optimality_ratio": 1.0,
+                "optimality_ratio": optimality_ratio,
                 "fuzzy_risk_along_path": _path_fuzzy_risk(global_state.env, new_result["path"]),
                 "justification_text": justify,
             }
@@ -1104,7 +1182,7 @@ def _auto_replan_for_block(coords: Tuple[int, int], trigger_reason: str) -> None
                 "risk_score": new_result["risk"],
                 "justification": justify,
                 "is_replan": True,
-                "optimality_ratio": 1.0,
+                "optimality_ratio": optimality_ratio,
                 "fuzzy_risk_along_path": _path_fuzzy_risk(global_state.env, new_result["path"]),
                 "frontier_sizes": [],
             },
@@ -1272,6 +1350,7 @@ def handle_step_simulation() -> None:
             global_state.active_assignments.pop(amb_id, None)
             global_state.assignment_started_at.pop(amb_id, None)
             global_state.route_costs.pop(amb_id, None)
+            global_state.route_baseline_costs.pop(amb_id, None)
 
             global_state.refresh_victim_survival_probabilities()
             if global_state.rescue_queues.get(amb_id):

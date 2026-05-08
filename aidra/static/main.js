@@ -16,6 +16,7 @@ let animationId;
 let stepIntervalId = null;
 let blockModeActive = false;
 let hoveredCellKey = null;
+let latestMlReport = null;
 
 const routeColors = [0x5bd1ff, 0x00ccff, 0xff99ff, 0xffaa00];
 const victimSeverityColors = {
@@ -100,6 +101,11 @@ function init() {
         const algorithmParams = collectAlgorithmParams(algorithm);
         socket.emit("plan_full_rescue", { algorithm, alpha, algorithm_params: algorithmParams });
         appendLogEntry("USER ACTION", `Planning full rescue with ${algorithm.toUpperCase()} (alpha=${alpha.toFixed(1)}).`, "ASSIGNMENT");
+    });
+
+    document.getElementById("btn-retrain-ml").addEventListener("click", () => {
+        socket.emit("retrain_ml");
+        appendLogEntry("USER ACTION", "Retraining ML metrics for the current models.", "ASSIGNMENT");
     });
 
     document.getElementById("algorithm-select").addEventListener("change", (e) => {
@@ -544,6 +550,96 @@ function formatAmbulanceLoads(ambulances) {
     return ambulances.map((amb) => `${amb.id}: ${Number(amb.load ?? 0)}/${Number(amb.capacity ?? 2)}`).join(" | ");
 }
 
+function formatMetricValue(value) {
+    const numericValue = Number(value);
+    return Number.isFinite(numericValue) ? numericValue.toFixed(3) : "0.000";
+}
+
+function modelDisplayName(modelKey) {
+    if (modelKey === "knn") return "kNN";
+    if (modelKey === "nb") return "Naive Bayes";
+    return modelKey;
+}
+
+function taskDisplayName(taskKey) {
+    if (taskKey === "survival") return "Survival";
+    if (taskKey === "risk") return "Risk";
+    return taskKey;
+}
+
+function intensityFromValue(value, maxValue) {
+    if (maxValue <= 0) {
+        return 0.12;
+    }
+    const normalized = Math.min(1, Math.max(0, value / maxValue));
+    return 0.12 + normalized * 0.88;
+}
+
+function renderConfusionMatrix(matrix) {
+    const rows = Array.isArray(matrix) ? matrix : [];
+    const size = Math.max(rows.length, 1);
+    const maxValue = rows.flat().reduce((max, cell) => Math.max(max, Number(cell) || 0), 0);
+    const cells = rows
+        .map((row, rowIndex) =>
+            row
+                .map((cell, colIndex) => {
+                    const numericValue = Number(cell) || 0;
+                    const alpha = intensityFromValue(numericValue, maxValue);
+                    const label = `Actual ${rowIndex + 1}, Predicted ${colIndex + 1}`;
+                    return `<div class="cm-cell" title="${label}: ${numericValue}" style="background: rgba(91, 209, 255, ${alpha.toFixed(3)})"></div>`;
+                })
+                .join("")
+        )
+        .join("");
+
+    return `
+        <div class="cm-wrap">
+            <div class="cm-axis cm-axis-top">Predicted</div>
+            <div class="cm-grid" style="grid-template-columns: repeat(${size}, minmax(0, 1fr));">
+                ${cells}
+            </div>
+            <div class="cm-axis cm-axis-bottom">Colour intensity shows cell magnitude</div>
+        </div>
+    `;
+}
+
+function renderMlMetricsPanel(mlReport) {
+    if (mlReport) {
+        latestMlReport = mlReport;
+    }
+    const root = document.getElementById("ml-metrics-root");
+    if (!root || !latestMlReport) {
+        return;
+    }
+
+    root.innerHTML = Object.entries(latestMlReport)
+        .map(([taskKey, models]) => {
+            const modelCards = Object.entries(models || {})
+                .map(([modelKey, report]) => `
+                    <article class="ml-model-card">
+                        <div class="ml-model-name">${modelDisplayName(modelKey)}</div>
+                        <div class="ml-model-metric-row"><span>Accuracy</span><strong>${formatMetricValue(report.accuracy)}</strong></div>
+                        <div class="ml-model-metric-row"><span>Precision (macro)</span><strong>${formatMetricValue(report.precision)}</strong></div>
+                        <div class="ml-model-metric-row"><span>Recall (macro)</span><strong>${formatMetricValue(report.recall)}</strong></div>
+                        <div class="ml-model-metric-row"><span>F1-score (macro)</span><strong>${formatMetricValue(report.f1)}</strong></div>
+                        <div class="ml-confusion-block">
+                            <div class="ml-confusion-title">Confusion Matrix</div>
+                            ${renderConfusionMatrix(report.confusion)}
+                        </div>
+                    </article>
+                `)
+                .join("");
+
+            return `
+                <section class="ml-task-section">
+                    <div class="ml-task-title">${taskDisplayName(taskKey)} Metrics</div>
+                    <div class="ml-model-grid">${modelCards}</div>
+                </section>
+            `;
+        })
+        .join("");
+}
+
 socket.on("state_update", (data) => {
     gameState = data;
 
@@ -659,9 +755,12 @@ socket.on("state_update", (data) => {
     document.getElementById("ambulance-loads").textContent = formatAmbulanceLoads(data.ambulances || []);
     document.getElementById("csp-assignment").textContent = formatAssignmentPlan(data.csp_assignment);
     document.getElementById("victim-survival").textContent = formatSurvivalList((data.victims || []).filter((victim) => !victim.rescued));
+    document.getElementById("path-optimality-ratio").textContent = `${formatMetricValue(data.path_optimality_ratio ?? 1.0)}x`;
+    document.getElementById("resource-utilization-rate").textContent = `${Math.max(0, Math.min(100, Number(data.resource_utilization_rate ?? 0))).toFixed(1)}%`;
     document.getElementById("alpha-value").textContent = parseFloat(document.getElementById("alpha-slider").value).toFixed(1);
     updateTradeoffBanner();
     updateLandmarkLabels();
+    renderMlMetricsPanel(data.ml_report);
 });
 
 socket.on("route_planned", (data) => {
@@ -709,6 +808,7 @@ socket.on("full_rescue_planned", (data) => {
 socket.on("ml_report", (data) => {
     const survival = data.ml_report?.survival || {};
     const risk = data.ml_report?.risk || {};
+    renderMlMetricsPanel(data.ml_report);
     appendLogEntry("ML REPORT", `Startup model comparison loaded. Survival models: ${Object.keys(survival).join(", ")}; Risk models: ${Object.keys(risk).join(", ")}.`, "ASSIGNMENT");
 });
 

@@ -31,7 +31,7 @@
       "A2": "V3"
     },
     "step": 0,
-    "timestamp": "2026-05-08T06:49:48.263351Z",
+    "timestamp": "2026-05-08T11:11:40.847194Z",
     "victim_id": "",
     "chosen_path": [],
     "alpha_used": 0.0,
@@ -124,7 +124,7 @@
     "justification_text": "Model comparison report emitted at startup.",
     "trigger_reason": "startup_model_report",
     "step": 0,
-    "timestamp": "2026-05-08T06:49:48.265445Z",
+    "timestamp": "2026-05-08T11:11:40.848579Z",
     "victim_id": "",
     "chosen_path": [],
     "alpha_used": 0.0,
@@ -205,11 +205,11 @@
         0
       ]
     ],
-    "alpha_used": 1.0,
+    "alpha_used": 7.0,
     "time_cost": 13.0,
     "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
+    "algorithm": "astar",
+    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with ASTAR (alpha=7.0).",
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
     "fuzzy_risk_along_path": 0.13333333333333325,
@@ -239,8 +239,8 @@
     "assignment_plan": {
       "A1": "V2"
     },
-    "step": 103,
-    "timestamp": "2026-05-08T06:50:49.398115Z",
+    "step": 147,
+    "timestamp": "2026-05-08T11:12:57.075861Z",
     "old_route_cost": 0.0,
     "new_route_cost": 0.0,
     "updated_survival_prob": 0.0,
@@ -312,11 +312,11 @@
         9
       ]
     ],
-    "alpha_used": 1.0,
+    "alpha_used": 7.0,
     "time_cost": 13.0,
     "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A2 to V3 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
+    "algorithm": "astar",
+    "justification_text": "Auto-dispatched A2 to V3 from the full rescue queue with ASTAR (alpha=7.0).",
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
     "fuzzy_risk_along_path": 0.13519137866963946,
@@ -347,8 +347,8 @@
       "A1": "V2",
       "A2": "V3"
     },
-    "step": 103,
-    "timestamp": "2026-05-08T06:50:50.847053Z",
+    "step": 147,
+    "timestamp": "2026-05-08T11:12:57.111933Z",
     "old_route_cost": 0.0,
     "new_route_cost": 0.0,
     "updated_survival_prob": 0.0,
@@ -396,3968 +396,8 @@
     ],
     "trigger_reason": "full_rescue_plan",
     "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
-    "step": 103,
-    "timestamp": "2026-05-08T06:50:50.881029Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V2",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        2,
-        8
-      ],
-      [
-        2,
-        7
-      ],
-      [
-        1,
-        7
-      ],
-      [
-        1,
-        6
-      ],
-      [
-        1,
-        5
-      ],
-      [
-        1,
-        4
-      ],
-      [
-        1,
-        3
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2"
-    },
-    "step": 107,
-    "timestamp": "2026-05-08T06:51:00.630647Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V3",
-    "chosen_path": [
-      [
-        9,
-        0
-      ],
-      [
-        8,
-        0
-      ],
-      [
-        7,
-        0
-      ],
-      [
-        7,
-        1
-      ],
-      [
-        7,
-        2
-      ],
-      [
-        7,
-        3
-      ],
-      [
-        8,
-        3
-      ],
-      [
-        8,
-        4
-      ],
-      [
-        8,
-        5
-      ],
-      [
-        8,
-        6
-      ],
-      [
-        8,
-        7
-      ],
-      [
-        8,
-        8
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A2 to V3 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13519137866963946,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "step": 107,
-    "timestamp": "2026-05-08T06:51:01.995458Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "assignment_plan": {
-      "A1": [
-        "V2",
-        "V1",
-        "V5"
-      ],
-      "A2": [
-        "V3",
-        "V4"
-      ]
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "trigger_reason": "full_rescue_plan",
-    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
-    "step": 107,
-    "timestamp": "2026-05-08T06:51:02.025136Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V2",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V2 to a medical centre; rescue completed in 6.5s.",
-    "step": 120,
-    "timestamp": "2026-05-08T06:51:02.095525Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V1",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V1 to a medical centre; rescue completed in 6.5s.",
-    "step": 120,
-    "timestamp": "2026-05-08T06:51:02.116952Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V5",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        3,
-        9
-      ],
-      [
-        4,
-        9
-      ],
-      [
-        4,
-        8
-      ],
-      [
-        4,
-        7
-      ],
-      [
-        4,
-        6
-      ],
-      [
-        4,
-        5
-      ],
-      [
-        4,
-        4
-      ],
-      [
-        4,
-        3
-      ],
-      [
-        4,
-        2
-      ],
-      [
-        3,
-        2
-      ],
-      [
-        2,
-        2
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 17.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A1 to V5 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.1472775093652513,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "step": 120,
-    "timestamp": "2026-05-08T06:51:03.474596Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V3",
-    "updated_survival_prob": 0.6315131510554775,
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V3 to a medical centre; rescue completed in 6.5s.",
-    "step": 120,
-    "timestamp": "2026-05-08T06:51:03.505033Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V4",
-    "updated_survival_prob": 0.5074960559083632,
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V4 to a medical centre; rescue completed in 6.5s.",
-    "step": 120,
-    "timestamp": "2026-05-08T06:51:03.527572Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V5",
-    "updated_survival_prob": 0.9965480829672922,
-    "assignment_plan": {
-      "A1": "V5"
-    },
-    "victim_priority_list": [],
-    "justification_text": "A1 delivered V5 to a medical centre; rescue completed in 8.5s.",
-    "step": 137,
-    "timestamp": "2026-05-08T06:51:03.576559Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "assignment_plan": {},
-    "victim_priority_list": [],
-    "trigger_reason": "full_rescue_plan",
-    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
-    "step": 149,
-    "timestamp": "2026-05-08T06:51:03.615255Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "SCENARIO_START",
-    "scenario": "A",
-    "justification_text": "Starting scenario A.",
-    "trigger_reason": "scenario_init",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V3"
-    },
-    "step": 0,
-    "timestamp": "2026-05-08T06:51:16.967551Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ML_REPORT",
-    "ml_report": {
-      "survival": {
-        "knn": {
-          "accuracy": 0.768,
-          "precision": 0.6190476190476191,
-          "recall": 0.38235294117647056,
-          "f1": 0.4727272727272727,
-          "confusion": [
-            [
-              83,
-              8
-            ],
-            [
-              21,
-              13
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.912,
-          "precision": 0.8285714285714286,
-          "recall": 0.8529411764705882,
-          "f1": 0.8405797101449275,
-          "confusion": [
-            [
-              85,
-              6
-            ],
-            [
-              5,
-              29
-            ]
-          ]
-        }
-      },
-      "risk": {
-        "knn": {
-          "accuracy": 0.584,
-          "precision": 0.6190476190476191,
-          "recall": 0.582089552238806,
-          "f1": 0.6,
-          "confusion": [
-            [
-              34,
-              24
-            ],
-            [
-              28,
-              39
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.952,
-          "precision": 0.9552238805970149,
-          "recall": 0.9552238805970149,
-          "f1": 0.9552238805970149,
-          "confusion": [
-            [
-              55,
-              3
-            ],
-            [
-              3,
-              64
-            ]
-          ]
-        }
-      }
-    },
-    "justification_text": "Model comparison report emitted at startup.",
-    "trigger_reason": "startup_model_report",
-    "step": 0,
-    "timestamp": "2026-05-08T06:51:16.992561Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [],
-    "updated_survival_prob": 0.0,
-    "assignment_plan": {},
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V2",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        2,
-        8
-      ],
-      [
-        2,
-        7
-      ],
-      [
-        1,
-        7
-      ],
-      [
-        1,
-        6
-      ],
-      [
-        1,
-        5
-      ],
-      [
-        1,
-        4
-      ],
-      [
-        1,
-        3
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2"
-    },
-    "step": 23,
-    "timestamp": "2026-05-08T06:51:39.626973Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V3",
-    "chosen_path": [
-      [
-        9,
-        0
-      ],
-      [
-        8,
-        0
-      ],
-      [
-        7,
-        0
-      ],
-      [
-        7,
-        1
-      ],
-      [
-        7,
-        2
-      ],
-      [
-        7,
-        3
-      ],
-      [
-        8,
-        3
-      ],
-      [
-        8,
-        4
-      ],
-      [
-        8,
-        5
-      ],
-      [
-        8,
-        6
-      ],
-      [
-        8,
-        7
-      ],
-      [
-        8,
-        8
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A2 to V3 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13519137866963946,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "step": 23,
-    "timestamp": "2026-05-08T06:51:41.228004Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "assignment_plan": {
-      "A1": [
-        "V2",
-        "V1",
-        "V5"
-      ],
-      "A2": [
-        "V3",
-        "V4"
-      ]
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "trigger_reason": "full_rescue_plan",
-    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
-    "step": 23,
-    "timestamp": "2026-05-08T06:51:41.263704Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V2",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V2 to a medical centre; rescue completed in 6.5s.",
-    "step": 36,
-    "timestamp": "2026-05-08T06:51:41.333857Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V1",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V1 to a medical centre; rescue completed in 6.5s.",
-    "step": 36,
-    "timestamp": "2026-05-08T06:51:41.361964Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V5",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        3,
-        9
-      ],
-      [
-        4,
-        9
-      ],
-      [
-        4,
-        8
-      ],
-      [
-        4,
-        7
-      ],
-      [
-        4,
-        6
-      ],
-      [
-        4,
-        5
-      ],
-      [
-        4,
-        4
-      ],
-      [
-        4,
-        3
-      ],
-      [
-        4,
-        2
-      ],
-      [
-        3,
-        2
-      ],
-      [
-        2,
-        2
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 17.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A1 to V5 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.1472775093652513,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "step": 36,
-    "timestamp": "2026-05-08T06:51:43.021338Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V3",
-    "updated_survival_prob": 0.1651912123205609,
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V3 to a medical centre; rescue completed in 6.5s.",
-    "step": 36,
-    "timestamp": "2026-05-08T06:51:43.058865Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V4",
-    "updated_survival_prob": 0.1063264655535143,
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V4 to a medical centre; rescue completed in 6.5s.",
-    "step": 36,
-    "timestamp": "2026-05-08T06:51:43.084731Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V5",
-    "updated_survival_prob": 0.9368742480719834,
-    "assignment_plan": {
-      "A1": "V5"
-    },
-    "victim_priority_list": [],
-    "justification_text": "A1 delivered V5 to a medical centre; rescue completed in 8.5s.",
-    "step": 53,
-    "timestamp": "2026-05-08T06:51:43.388117Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "SCENARIO_START",
-    "scenario": "A",
-    "justification_text": "Starting scenario A.",
-    "trigger_reason": "scenario_init",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V3"
-    },
-    "step": 0,
-    "timestamp": "2026-05-08T06:52:00.645680Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ML_REPORT",
-    "ml_report": {
-      "survival": {
-        "knn": {
-          "accuracy": 0.768,
-          "precision": 0.6190476190476191,
-          "recall": 0.38235294117647056,
-          "f1": 0.4727272727272727,
-          "confusion": [
-            [
-              83,
-              8
-            ],
-            [
-              21,
-              13
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.912,
-          "precision": 0.8285714285714286,
-          "recall": 0.8529411764705882,
-          "f1": 0.8405797101449275,
-          "confusion": [
-            [
-              85,
-              6
-            ],
-            [
-              5,
-              29
-            ]
-          ]
-        }
-      },
-      "risk": {
-        "knn": {
-          "accuracy": 0.584,
-          "precision": 0.6190476190476191,
-          "recall": 0.582089552238806,
-          "f1": 0.6,
-          "confusion": [
-            [
-              34,
-              24
-            ],
-            [
-              28,
-              39
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.952,
-          "precision": 0.9552238805970149,
-          "recall": 0.9552238805970149,
-          "f1": 0.9552238805970149,
-          "confusion": [
-            [
-              55,
-              3
-            ],
-            [
-              3,
-              64
-            ]
-          ]
-        }
-      }
-    },
-    "justification_text": "Model comparison report emitted at startup.",
-    "trigger_reason": "startup_model_report",
-    "step": 0,
-    "timestamp": "2026-05-08T06:52:00.685685Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [],
-    "updated_survival_prob": 0.0,
-    "assignment_plan": {},
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "SCENARIO_START",
-    "scenario": "C",
-    "justification_text": "Starting scenario C.",
-    "trigger_reason": "scenario_init",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V3"
-    },
-    "step": 0,
-    "timestamp": "2026-05-08T06:52:07.897885Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ML_REPORT",
-    "ml_report": {
-      "survival": {
-        "knn": {
-          "accuracy": 0.768,
-          "precision": 0.6190476190476191,
-          "recall": 0.38235294117647056,
-          "f1": 0.4727272727272727,
-          "confusion": [
-            [
-              83,
-              8
-            ],
-            [
-              21,
-              13
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.912,
-          "precision": 0.8285714285714286,
-          "recall": 0.8529411764705882,
-          "f1": 0.8405797101449275,
-          "confusion": [
-            [
-              85,
-              6
-            ],
-            [
-              5,
-              29
-            ]
-          ]
-        }
-      },
-      "risk": {
-        "knn": {
-          "accuracy": 0.584,
-          "precision": 0.6190476190476191,
-          "recall": 0.582089552238806,
-          "f1": 0.6,
-          "confusion": [
-            [
-              34,
-              24
-            ],
-            [
-              28,
-              39
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.952,
-          "precision": 0.9552238805970149,
-          "recall": 0.9552238805970149,
-          "f1": 0.9552238805970149,
-          "confusion": [
-            [
-              55,
-              3
-            ],
-            [
-              3,
-              64
-            ]
-          ]
-        }
-      }
-    },
-    "justification_text": "Model comparison report emitted at startup.",
-    "trigger_reason": "startup_model_report",
-    "step": 0,
-    "timestamp": "2026-05-08T06:52:07.927724Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [],
-    "updated_survival_prob": 0.0,
-    "assignment_plan": {},
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "REPLAN",
-    "trigger_reason": "scenario_event",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {},
-    "justification_text": "Road blocked at (3, 5); no active ambulance route crossed the blocked cell.",
-    "step": 2,
-    "timestamp": "2026-05-08T06:52:08.411577Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "trigger_reason": "scenario_event",
-    "victim_id": "V6",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V4"
-    },
-    "justification_text": "Scenario event added V6 at (6, 1); user can manually replan.",
-    "step": 4,
-    "timestamp": "2026-05-08T06:52:09.566408Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "REPLAN",
-    "trigger_reason": "scenario_event",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {},
-    "justification_text": "Road blocked at (6, 5); no active ambulance route crossed the blocked cell.",
-    "step": 5,
-    "timestamp": "2026-05-08T06:52:09.916473Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V2",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        2,
-        8
-      ],
-      [
-        2,
-        7
-      ],
-      [
-        1,
-        7
-      ],
-      [
-        1,
-        6
-      ],
-      [
-        1,
-        5
-      ],
-      [
-        1,
-        4
-      ],
-      [
-        1,
-        3
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2"
-    },
-    "step": 17,
-    "timestamp": "2026-05-08T06:52:26.920546Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V6",
-    "chosen_path": [
-      [
-        9,
-        0
-      ],
-      [
-        8,
-        0
-      ],
-      [
-        7,
-        0
-      ],
-      [
-        6,
-        0
-      ],
-      [
-        6,
-        1
-      ],
-      [
-        7,
-        1
-      ],
-      [
-        7,
-        2
-      ],
-      [
-        7,
-        3
-      ],
-      [
-        8,
-        3
-      ],
-      [
-        9,
-        3
-      ],
-      [
-        9,
-        4
-      ],
-      [
-        9,
-        5
-      ],
-      [
-        9,
-        6
-      ],
-      [
-        9,
-        7
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 15.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A2 to V6 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V6"
-    },
-    "step": 17,
-    "timestamp": "2026-05-08T06:52:27.577128Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "assignment_plan": {
-      "A1": [
-        "V2",
-        "V1",
-        "V5"
-      ],
-      "A2": [
-        "V6",
-        "V3",
-        "V4"
-      ]
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "trigger_reason": "full_rescue_plan",
-    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
-    "step": 17,
-    "timestamp": "2026-05-08T06:52:27.610605Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V2",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V6"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V2 to a medical centre; rescue completed in 6.5s.",
-    "step": 30,
-    "timestamp": "2026-05-08T06:52:27.686517Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V1",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V6"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V1 to a medical centre; rescue completed in 6.5s.",
-    "step": 30,
-    "timestamp": "2026-05-08T06:52:27.714718Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V5",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        3,
-        9
-      ],
-      [
-        4,
-        9
-      ],
-      [
-        4,
-        8
-      ],
-      [
-        4,
-        7
-      ],
-      [
-        4,
-        6
-      ],
-      [
-        4,
-        5
-      ],
-      [
-        4,
-        4
-      ],
-      [
-        4,
-        3
-      ],
-      [
-        4,
-        2
-      ],
-      [
-        3,
-        2
-      ],
-      [
-        2,
-        2
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 17.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A1 to V5 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.1477511287647019,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A2": "V6",
-      "A1": "V5"
-    },
-    "step": 30,
-    "timestamp": "2026-05-08T06:52:29.116195Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V6",
-    "updated_survival_prob": 0.18171918471760637,
-    "assignment_plan": {
-      "A2": "V6",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V6 to a medical centre; rescue completed in 7.5s.",
-    "step": 32,
-    "timestamp": "2026-05-08T06:52:29.159898Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V3",
-    "updated_survival_prob": 0.16476755070120638,
-    "assignment_plan": {
-      "A2": "V6",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V3 to a medical centre; rescue completed in 7.5s.",
-    "step": 32,
-    "timestamp": "2026-05-08T06:52:29.193659Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V4",
-    "chosen_path": [
-      [
-        9,
-        0
-      ],
-      [
-        8,
-        0
-      ],
-      [
-        8,
-        1
-      ],
-      [
-        8,
-        2
-      ],
-      [
-        8,
-        3
-      ],
-      [
-        8,
-        4
-      ],
-      [
-        8,
-        5
-      ],
-      [
-        8,
-        6
-      ],
-      [
-        8,
-        7
-      ],
-      [
-        8,
-        8
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 11.0,
-    "risk_cost": 0.0,
-    "algorithm": "simulated_annealing",
-    "justification_text": "Auto-dispatched A2 to V4 from the full rescue queue with SIMULATED_ANNEALING (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13552920509442237,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V5",
-      "A2": "V4"
-    },
-    "step": 32,
-    "timestamp": "2026-05-08T06:52:29.830004Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V4",
-    "updated_survival_prob": 0.108938536517727,
-    "assignment_plan": {
-      "A1": "V5",
-      "A2": "V4"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V4 to a medical centre; rescue completed in 5.5s.",
-    "step": 43,
-    "timestamp": "2026-05-08T06:52:29.888921Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V5",
-    "updated_survival_prob": 0.9332931471298387,
-    "assignment_plan": {
-      "A1": "V5"
-    },
-    "victim_priority_list": [],
-    "justification_text": "A1 delivered V5 to a medical centre; rescue completed in 8.5s.",
-    "step": 47,
-    "timestamp": "2026-05-08T06:52:30.921834Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "SCENARIO_START",
-    "scenario": "A",
-    "justification_text": "Starting scenario A.",
-    "trigger_reason": "scenario_init",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V3"
-    },
-    "step": 0,
-    "timestamp": "2026-05-08T06:52:52.323024Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ML_REPORT",
-    "ml_report": {
-      "survival": {
-        "knn": {
-          "accuracy": 0.768,
-          "precision": 0.6190476190476191,
-          "recall": 0.38235294117647056,
-          "f1": 0.4727272727272727,
-          "confusion": [
-            [
-              83,
-              8
-            ],
-            [
-              21,
-              13
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.912,
-          "precision": 0.8285714285714286,
-          "recall": 0.8529411764705882,
-          "f1": 0.8405797101449275,
-          "confusion": [
-            [
-              85,
-              6
-            ],
-            [
-              5,
-              29
-            ]
-          ]
-        }
-      },
-      "risk": {
-        "knn": {
-          "accuracy": 0.584,
-          "precision": 0.6190476190476191,
-          "recall": 0.582089552238806,
-          "f1": 0.6,
-          "confusion": [
-            [
-              34,
-              24
-            ],
-            [
-              28,
-              39
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.952,
-          "precision": 0.9552238805970149,
-          "recall": 0.9552238805970149,
-          "f1": 0.9552238805970149,
-          "confusion": [
-            [
-              55,
-              3
-            ],
-            [
-              3,
-              64
-            ]
-          ]
-        }
-      }
-    },
-    "justification_text": "Model comparison report emitted at startup.",
-    "trigger_reason": "startup_model_report",
-    "step": 0,
-    "timestamp": "2026-05-08T06:52:52.351290Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [],
-    "updated_survival_prob": 0.0,
-    "assignment_plan": {},
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V2",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        2,
-        8
-      ],
-      [
-        2,
-        7
-      ],
-      [
-        1,
-        7
-      ],
-      [
-        1,
-        6
-      ],
-      [
-        1,
-        5
-      ],
-      [
-        1,
-        4
-      ],
-      [
-        1,
-        3
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "astar",
-    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with ASTAR (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2"
-    },
-    "step": 16,
-    "timestamp": "2026-05-08T06:53:00.553624Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V3",
-    "chosen_path": [
-      [
-        9,
-        0
-      ],
-      [
-        8,
-        0
-      ],
-      [
-        7,
-        0
-      ],
-      [
-        7,
-        1
-      ],
-      [
-        7,
-        2
-      ],
-      [
-        7,
-        3
-      ],
-      [
-        8,
-        3
-      ],
-      [
-        8,
-        4
-      ],
-      [
-        8,
-        5
-      ],
-      [
-        8,
-        6
-      ],
-      [
-        8,
-        7
-      ],
-      [
-        8,
-        8
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "astar",
-    "justification_text": "Auto-dispatched A2 to V3 from the full rescue queue with ASTAR (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13519137866963946,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "step": 16,
-    "timestamp": "2026-05-08T06:53:00.613635Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "assignment_plan": {
-      "A1": [
-        "V2",
-        "V1",
-        "V5"
-      ],
-      "A2": [
-        "V3",
-        "V4"
-      ]
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "trigger_reason": "full_rescue_plan",
-    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
-    "step": 16,
-    "timestamp": "2026-05-08T06:53:00.653597Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V2",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V2 to a medical centre; rescue completed in 6.5s.",
-    "step": 29,
-    "timestamp": "2026-05-08T06:53:06.609929Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V1",
-    "updated_survival_prob": 0.001,
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V3"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A1 delivered V1 to a medical centre; rescue completed in 6.5s.",
-    "step": 29,
-    "timestamp": "2026-05-08T06:53:06.648143Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V5",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        3,
-        9
-      ],
-      [
-        4,
-        9
-      ],
-      [
-        4,
-        8
-      ],
-      [
-        4,
-        7
-      ],
-      [
-        4,
-        6
-      ],
-      [
-        4,
-        5
-      ],
-      [
-        4,
-        4
-      ],
-      [
-        4,
-        3
-      ],
-      [
-        4,
-        2
-      ],
-      [
-        3,
-        2
-      ],
-      [
-        2,
-        2
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 17.0,
-    "risk_cost": 0.0,
-    "algorithm": "astar",
-    "justification_text": "Auto-dispatched A1 to V5 from the full rescue queue with ASTAR (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.1472775093652513,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "step": 29,
-    "timestamp": "2026-05-08T06:53:06.701182Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V3",
-    "updated_survival_prob": 0.16526951238248233,
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V3 to a medical centre; rescue completed in 6.5s.",
-    "step": 29,
-    "timestamp": "2026-05-08T06:53:06.748572Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V4",
-    "updated_survival_prob": 0.10638041946597221,
-    "assignment_plan": {
-      "A2": "V3",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V4 to a medical centre; rescue completed in 6.5s.",
-    "step": 29,
-    "timestamp": "2026-05-08T06:53:06.784126Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V5",
-    "updated_survival_prob": 0.932802663892682,
-    "assignment_plan": {
-      "A1": "V5"
-    },
-    "victim_priority_list": [],
-    "justification_text": "A1 delivered V5 to a medical centre; rescue completed in 8.5s.",
-    "step": 46,
-    "timestamp": "2026-05-08T06:53:15.110221Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "SCENARIO_START",
-    "scenario": "A",
-    "justification_text": "Starting scenario A.",
-    "trigger_reason": "scenario_init",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V3"
-    },
-    "step": 0,
-    "timestamp": "2026-05-08T06:54:03.878784Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ML_REPORT",
-    "ml_report": {
-      "survival": {
-        "knn": {
-          "accuracy": 0.768,
-          "precision": 0.6190476190476191,
-          "recall": 0.38235294117647056,
-          "f1": 0.4727272727272727,
-          "confusion": [
-            [
-              83,
-              8
-            ],
-            [
-              21,
-              13
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.912,
-          "precision": 0.8285714285714286,
-          "recall": 0.8529411764705882,
-          "f1": 0.8405797101449275,
-          "confusion": [
-            [
-              85,
-              6
-            ],
-            [
-              5,
-              29
-            ]
-          ]
-        }
-      },
-      "risk": {
-        "knn": {
-          "accuracy": 0.584,
-          "precision": 0.6190476190476191,
-          "recall": 0.582089552238806,
-          "f1": 0.6,
-          "confusion": [
-            [
-              34,
-              24
-            ],
-            [
-              28,
-              39
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.952,
-          "precision": 0.9552238805970149,
-          "recall": 0.9552238805970149,
-          "f1": 0.9552238805970149,
-          "confusion": [
-            [
-              55,
-              3
-            ],
-            [
-              3,
-              64
-            ]
-          ]
-        }
-      }
-    },
-    "justification_text": "Model comparison report emitted at startup.",
-    "trigger_reason": "startup_model_report",
-    "step": 0,
-    "timestamp": "2026-05-08T06:54:03.910050Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [],
-    "updated_survival_prob": 0.0,
-    "assignment_plan": {},
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "SCENARIO_START",
-    "scenario": "C",
-    "justification_text": "Starting scenario C.",
-    "trigger_reason": "scenario_init",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V3"
-    },
-    "step": 0,
-    "timestamp": "2026-05-08T06:54:06.302244Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ML_REPORT",
-    "ml_report": {
-      "survival": {
-        "knn": {
-          "accuracy": 0.768,
-          "precision": 0.6190476190476191,
-          "recall": 0.38235294117647056,
-          "f1": 0.4727272727272727,
-          "confusion": [
-            [
-              83,
-              8
-            ],
-            [
-              21,
-              13
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.912,
-          "precision": 0.8285714285714286,
-          "recall": 0.8529411764705882,
-          "f1": 0.8405797101449275,
-          "confusion": [
-            [
-              85,
-              6
-            ],
-            [
-              5,
-              29
-            ]
-          ]
-        }
-      },
-      "risk": {
-        "knn": {
-          "accuracy": 0.584,
-          "precision": 0.6190476190476191,
-          "recall": 0.582089552238806,
-          "f1": 0.6,
-          "confusion": [
-            [
-              34,
-              24
-            ],
-            [
-              28,
-              39
-            ]
-          ]
-        },
-        "nb": {
-          "accuracy": 0.952,
-          "precision": 0.9552238805970149,
-          "recall": 0.9552238805970149,
-          "f1": 0.9552238805970149,
-          "confusion": [
-            [
-              55,
-              3
-            ],
-            [
-              3,
-              64
-            ]
-          ]
-        }
-      }
-    },
-    "justification_text": "Model comparison report emitted at startup.",
-    "trigger_reason": "startup_model_report",
-    "step": 0,
-    "timestamp": "2026-05-08T06:54:06.337786Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [],
-    "updated_survival_prob": 0.0,
-    "assignment_plan": {},
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "REPLAN",
-    "trigger_reason": "scenario_event",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {},
-    "justification_text": "Road blocked at (3, 5); no active ambulance route crossed the blocked cell.",
-    "step": 2,
-    "timestamp": "2026-05-08T06:54:07.123331Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "trigger_reason": "scenario_event",
-    "victim_id": "V6",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1",
-      "A2": "V4"
-    },
-    "justification_text": "Scenario event added V6 at (6, 1); user can manually replan.",
-    "step": 4,
-    "timestamp": "2026-05-08T06:54:08.309608Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "REPLAN",
-    "trigger_reason": "scenario_event",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {},
-    "justification_text": "Road blocked at (6, 5); no active ambulance route crossed the blocked cell.",
-    "step": 5,
-    "timestamp": "2026-05-08T06:54:08.624901Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V2",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        1,
-        9
-      ],
-      [
-        2,
-        9
-      ],
-      [
-        2,
-        8
-      ],
-      [
-        2,
-        7
-      ],
-      [
-        1,
-        7
-      ],
-      [
-        1,
-        6
-      ],
-      [
-        1,
-        5
-      ],
-      [
-        1,
-        4
-      ],
-      [
-        1,
-        3
-      ],
-      [
-        1,
-        2
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 13.0,
-    "risk_cost": 0.0,
-    "algorithm": "astar",
-    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with ASTAR (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2"
-    },
-    "step": 16,
-    "timestamp": "2026-05-08T06:54:14.606301Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V6",
-    "chosen_path": [
-      [
-        9,
-        0
-      ],
-      [
-        8,
-        0
-      ],
-      [
-        7,
-        0
-      ],
-      [
-        6,
-        0
-      ],
-      [
-        6,
-        1
-      ],
-      [
-        7,
-        1
-      ],
-      [
-        7,
-        2
-      ],
-      [
-        7,
-        3
-      ],
-      [
-        8,
-        3
-      ],
-      [
-        9,
-        3
-      ],
-      [
-        9,
-        4
-      ],
-      [
-        9,
-        5
-      ],
-      [
-        9,
-        6
-      ],
-      [
-        9,
-        7
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 15.0,
-    "risk_cost": 0.0,
-    "algorithm": "astar",
-    "justification_text": "Auto-dispatched A2 to V6 from the full rescue queue with ASTAR (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V6"
-    },
-    "step": 16,
-    "timestamp": "2026-05-08T06:54:14.657711Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ASSIGNMENT",
-    "assignment_plan": {
-      "A1": [
-        "V2",
-        "V1",
-        "V5"
-      ],
-      "A2": [
-        "V6",
-        "V3",
-        "V4"
-      ]
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "trigger_reason": "full_rescue_plan",
-    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
-    "step": 16,
-    "timestamp": "2026-05-08T06:54:14.704191Z",
+    "step": 147,
+    "timestamp": "2026-05-08T11:12:57.128788Z",
     "victim_id": "",
     "chosen_path": [],
     "alpha_used": 0.0,
@@ -4379,50 +419,50 @@
   {
     "event_type": "REPLAN",
     "trigger_reason": "road_blocked",
-    "victim_id": "V1",
+    "victim_id": "V4",
     "chosen_path": [
       [
-        2,
-        7
+        8,
+        3
       ],
       [
-        2,
-        6
-      ],
-      [
-        2,
-        5
-      ],
-      [
-        2,
+        8,
         4
       ],
       [
-        2,
-        3
+        8,
+        5
       ],
       [
-        1,
-        3
+        9,
+        5
       ],
       [
-        1,
-        2
+        9,
+        6
       ],
       [
-        0,
-        2
+        9,
+        7
       ],
       [
-        0,
-        1
+        8,
+        7
       ],
       [
-        0,
-        0
+        8,
+        8
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        9,
+        9
       ]
     ],
-    "alpha_used": 1.0,
+    "alpha_used": 7.0,
     "time_cost": 9.0,
     "risk_cost": 0.0,
     "old_route_cost": Infinity,
@@ -4437,10 +477,6 @@
         "priority": 3.1111
       },
       {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
         "victim_id": "V3",
         "priority": 2.1667
       },
@@ -4455,14 +491,14 @@
     ],
     "assignment_plan": {
       "A1": "V2",
-      "A2": "V6"
+      "A2": "V3"
     },
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.16082255104625692,
-    "justification_text": "Route for A1 to V1 crossed blocked cell (1, 4); replanned with astar (\u03b1=1.0).",
-    "step": 20,
-    "timestamp": "2026-05-08T06:54:16.414320Z",
+    "fuzzy_risk_along_path": 0.14056918526938408,
+    "justification_text": "Route for A2 to V4 crossed blocked cell (8, 6); replanned with astar (\u03b1=7.0).",
+    "step": 153,
+    "timestamp": "2026-05-08T11:13:00.216555Z",
     "updated_survival_prob": 0.0,
     "scenario": "",
     "ml_report": {},
@@ -4474,46 +510,34 @@
   {
     "event_type": "REPLAN",
     "trigger_reason": "road_blocked",
-    "victim_id": "medical_centre",
+    "victim_id": "V4",
     "chosen_path": [
       [
-        8,
-        3
-      ],
-      [
-        8,
-        4
-      ],
-      [
-        8,
-        5
-      ],
-      [
-        8,
-        6
+        9,
+        7
       ],
       [
         8,
         7
       ],
       [
-        9,
-        7
-      ],
-      [
-        9,
+        8,
         8
+      ],
+      [
+        8,
+        9
       ],
       [
         9,
         9
       ]
     ],
-    "alpha_used": 1.0,
-    "time_cost": 7.0,
+    "alpha_used": 7.0,
+    "time_cost": 4.0,
     "risk_cost": 0.0,
     "old_route_cost": Infinity,
-    "new_route_cost": 7.0,
+    "new_route_cost": 4.0,
     "victim_priority_list": [
       {
         "victim_id": "V2",
@@ -4522,10 +546,6 @@
       {
         "victim_id": "V1",
         "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
       },
       {
         "victim_id": "V3",
@@ -4542,85 +562,14 @@
     ],
     "assignment_plan": {
       "A1": "V2",
-      "A2": "V6"
+      "A2": "V3"
     },
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13911825599805128,
-    "justification_text": "Route for A2 to medical_centre crossed blocked cell (9, 6); replanned with astar (\u03b1=1.0).",
-    "step": 24,
-    "timestamp": "2026-05-08T06:54:18.360065Z",
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "REPLAN",
-    "trigger_reason": "road_blocked",
-    "victim_id": "medical_centre",
-    "chosen_path": [
-      [
-        8,
-        7
-      ],
-      [
-        8,
-        8
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 3.0,
-    "risk_cost": 0.0,
-    "old_route_cost": Infinity,
-    "new_route_cost": 3.0,
-    "victim_priority_list": [
-      {
-        "victim_id": "V2",
-        "priority": 3.2
-      },
-      {
-        "victim_id": "V1",
-        "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V2",
-      "A2": "V6"
-    },
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.14146379969056855,
-    "justification_text": "Route for A2 to medical_centre crossed blocked cell (9, 7); replanned with astar (\u03b1=1.0).",
-    "step": 28,
-    "timestamp": "2026-05-08T06:54:20.476546Z",
+    "fuzzy_risk_along_path": 0.1540577602278369,
+    "justification_text": "Route for A2 to V4 crossed blocked cell (9, 8); replanned with astar (\u03b1=7.0).",
+    "step": 158,
+    "timestamp": "2026-05-08T11:13:02.536272Z",
     "updated_survival_prob": 0.0,
     "scenario": "",
     "ml_report": {},
@@ -4636,16 +585,12 @@
     "updated_survival_prob": 0.001,
     "assignment_plan": {
       "A1": "V2",
-      "A2": "V6"
+      "A2": "V3"
     },
     "victim_priority_list": [
       {
         "victim_id": "V1",
         "priority": 3.1111
-      },
-      {
-        "victim_id": "V6",
-        "priority": 2.2
       },
       {
         "victim_id": "V3",
@@ -4661,8 +606,8 @@
       }
     ],
     "justification_text": "A1 delivered V2 to a medical centre; rescue completed in 6.5s.",
-    "step": 29,
-    "timestamp": "2026-05-08T06:54:20.626079Z",
+    "step": 160,
+    "timestamp": "2026-05-08T11:13:03.262112Z",
     "chosen_path": [],
     "alpha_used": 0.0,
     "time_cost": 0.0,
@@ -4686,13 +631,9 @@
     "updated_survival_prob": 0.001,
     "assignment_plan": {
       "A1": "V2",
-      "A2": "V6"
+      "A2": "V3"
     },
     "victim_priority_list": [
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
       {
         "victim_id": "V3",
         "priority": 2.1667
@@ -4707,8 +648,8 @@
       }
     ],
     "justification_text": "A1 delivered V1 to a medical centre; rescue completed in 6.5s.",
-    "step": 29,
-    "timestamp": "2026-05-08T06:54:20.663774Z",
+    "step": 160,
+    "timestamp": "2026-05-08T11:13:03.275288Z",
     "chosen_path": [],
     "alpha_used": 0.0,
     "time_cost": 0.0,
@@ -4802,20 +743,16 @@
         0
       ]
     ],
-    "alpha_used": 1.0,
+    "alpha_used": 7.0,
     "time_cost": 17.0,
     "risk_cost": 0.0,
     "algorithm": "astar",
-    "justification_text": "Auto-dispatched A1 to V5 from the full rescue queue with ASTAR (alpha=1.0).",
+    "justification_text": "Auto-dispatched A1 to V5 from the full rescue queue with ASTAR (alpha=7.0).",
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.1477511287647019,
+    "fuzzy_risk_along_path": 0.1472775093652513,
     "trigger_reason": "full_rescue_queue",
     "victim_priority_list": [
-      {
-        "victim_id": "V6",
-        "priority": 2.2
-      },
       {
         "victim_id": "V3",
         "priority": 2.1667
@@ -4830,11 +767,11 @@
       }
     ],
     "assignment_plan": {
-      "A2": "V6",
+      "A2": "V3",
       "A1": "V5"
     },
-    "step": 29,
-    "timestamp": "2026-05-08T06:54:20.720467Z",
+    "step": 160,
+    "timestamp": "2026-05-08T11:13:03.296093Z",
     "old_route_cost": 0.0,
     "new_route_cost": 0.0,
     "updated_survival_prob": 0.0,
@@ -4848,52 +785,10 @@
   {
     "event_type": "RESCUE_COMPLETE",
     "trigger_reason": "ambulance_arrival_med_center",
-    "victim_id": "V6",
-    "updated_survival_prob": 0.18181551856471148,
-    "assignment_plan": {
-      "A2": "V6",
-      "A1": "V5"
-    },
-    "victim_priority_list": [
-      {
-        "victim_id": "V3",
-        "priority": 2.1667
-      },
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "justification_text": "A2 delivered V6 to a medical centre; rescue completed in 7.5s.",
-    "step": 31,
-    "timestamp": "2026-05-08T06:54:21.624603Z",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "RESCUE_COMPLETE",
-    "trigger_reason": "ambulance_arrival_med_center",
     "victim_id": "V3",
-    "updated_survival_prob": 0.16485670854755843,
+    "updated_survival_prob": 0.9576047570456553,
     "assignment_plan": {
-      "A2": "V6",
+      "A2": "V3",
       "A1": "V5"
     },
     "victim_priority_list": [
@@ -4907,140 +802,14 @@
       }
     ],
     "justification_text": "A2 delivered V3 to a medical centre; rescue completed in 7.5s.",
-    "step": 31,
-    "timestamp": "2026-05-08T06:54:21.673761Z",
+    "step": 162,
+    "timestamp": "2026-05-08T11:13:04.260951Z",
     "chosen_path": [],
     "alpha_used": 0.0,
     "time_cost": 0.0,
     "risk_cost": 0.0,
     "old_route_cost": 0.0,
     "new_route_cost": 0.0,
-    "scenario": "",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V4",
-    "chosen_path": [
-      [
-        9,
-        0
-      ],
-      [
-        8,
-        0
-      ],
-      [
-        8,
-        1
-      ],
-      [
-        8,
-        2
-      ],
-      [
-        8,
-        3
-      ],
-      [
-        8,
-        4
-      ],
-      [
-        8,
-        5
-      ],
-      [
-        8,
-        6
-      ],
-      [
-        8,
-        7
-      ],
-      [
-        8,
-        8
-      ],
-      [
-        9,
-        8
-      ],
-      [
-        9,
-        9
-      ]
-    ],
-    "alpha_used": 1.0,
-    "time_cost": 11.0,
-    "risk_cost": 0.0,
-    "algorithm": "astar",
-    "justification_text": "Auto-dispatched A2 to V4 from the full rescue queue with ASTAR (alpha=1.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.1410926953126441,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V5",
-      "A2": "V4"
-    },
-    "step": 31,
-    "timestamp": "2026-05-08T06:54:21.724989Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "REPLAN",
-    "trigger_reason": "user_block",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "victim_priority_list": [
-      {
-        "victim_id": "V4",
-        "priority": 2.1
-      },
-      {
-        "victim_id": "V5",
-        "priority": 1.1
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V5",
-      "A2": "V4"
-    },
-    "justification_text": "Road blocked at (8, 4); no active ambulance route crossed the blocked cell.",
-    "step": 41,
-    "timestamp": "2026-05-08T06:54:26.830726Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "updated_survival_prob": 0.0,
     "scenario": "",
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
@@ -5055,10 +824,10 @@
     "event_type": "RESCUE_COMPLETE",
     "trigger_reason": "ambulance_arrival_med_center",
     "victim_id": "V4",
-    "updated_survival_prob": 0.10839756751807894,
+    "updated_survival_prob": 0.9314175937688889,
     "assignment_plan": {
-      "A1": "V5",
-      "A2": "V4"
+      "A2": "V3",
+      "A1": "V5"
     },
     "victim_priority_list": [
       {
@@ -5066,9 +835,9 @@
         "priority": 1.1
       }
     ],
-    "justification_text": "A2 delivered V4 to a medical centre; rescue completed in 5.5s.",
-    "step": 42,
-    "timestamp": "2026-05-08T06:54:27.121306Z",
+    "justification_text": "A2 delivered V4 to a medical centre; rescue completed in 7.5s.",
+    "step": 162,
+    "timestamp": "2026-05-08T11:13:04.275429Z",
     "chosen_path": [],
     "alpha_used": 0.0,
     "time_cost": 0.0,
@@ -5087,9 +856,67 @@
   },
   {
     "event_type": "REPLAN",
-    "trigger_reason": "user_block",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
+    "trigger_reason": "road_blocked",
+    "victim_id": "V5",
+    "chosen_path": [
+      [
+        4,
+        8
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "alpha_used": 7.0,
+    "time_cost": 12.0,
+    "risk_cost": 0.0,
+    "old_route_cost": Infinity,
+    "new_route_cost": 12.0,
     "victim_priority_list": [
       {
         "victim_id": "V5",
@@ -5099,19 +926,14 @@
     "assignment_plan": {
       "A1": "V5"
     },
-    "justification_text": "Road blocked at (4, 8); no active ambulance route crossed the blocked cell.",
-    "step": 43,
-    "timestamp": "2026-05-08T06:54:27.833121Z",
-    "victim_id": "",
-    "chosen_path": [],
-    "alpha_used": 0.0,
-    "time_cost": 0.0,
-    "risk_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.0,
+    "fuzzy_risk_along_path": 0.15375854352777216,
+    "justification_text": "Route for A1 to V5 crossed blocked cell (3, 2); replanned with astar (\u03b1=7.0).",
+    "step": 165,
+    "timestamp": "2026-05-08T11:13:06.191418Z",
+    "updated_survival_prob": 0.0,
+    "scenario": "",
     "ml_report": {},
     "reallocation_made": false,
     "realocation_made": false,
@@ -5122,14 +944,14 @@
     "event_type": "RESCUE_COMPLETE",
     "trigger_reason": "ambulance_arrival_med_center",
     "victim_id": "V5",
-    "updated_survival_prob": 0.932802663892682,
+    "updated_survival_prob": 0.9997932711326116,
     "assignment_plan": {
       "A1": "V5"
     },
     "victim_priority_list": [],
     "justification_text": "A1 delivered V5 to a medical centre; rescue completed in 8.5s.",
-    "step": 46,
-    "timestamp": "2026-05-08T06:54:29.122870Z",
+    "step": 177,
+    "timestamp": "2026-05-08T11:13:11.757179Z",
     "chosen_path": [],
     "alpha_used": 0.0,
     "time_cost": 0.0,
@@ -5153,9 +975,9 @@
     "new_route_cost": 0.0,
     "victim_priority_list": [],
     "assignment_plan": {},
-    "justification_text": "Road blocked at (5, 7); no active ambulance route crossed the blocked cell.",
-    "step": 47,
-    "timestamp": "2026-05-08T06:54:29.958282Z",
+    "justification_text": "Road blocked at (3, 9); no active ambulance route crossed the blocked cell.",
+    "step": 204,
+    "timestamp": "2026-05-08T11:13:25.391575Z",
     "victim_id": "",
     "chosen_path": [],
     "alpha_used": 0.0,
@@ -5166,6 +988,2297 @@
     "frontier_sizes": [],
     "optimality_ratio": 1.0,
     "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "ASSIGNMENT",
+    "assignment_plan": {},
+    "victim_priority_list": [],
+    "trigger_reason": "full_rescue_plan",
+    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
+    "step": 236,
+    "timestamp": "2026-05-08T11:13:41.612989Z",
+    "victim_id": "",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "SCENARIO_START",
+    "scenario": "C",
+    "justification_text": "Starting scenario C.",
+    "trigger_reason": "scenario_init",
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {
+      "A1": "V1",
+      "A2": "V3"
+    },
+    "step": 0,
+    "timestamp": "2026-05-08T11:13:50.190815Z",
+    "victim_id": "",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "ML_REPORT",
+    "ml_report": {
+      "survival": {
+        "knn": {
+          "accuracy": 0.768,
+          "precision": 0.6190476190476191,
+          "recall": 0.38235294117647056,
+          "f1": 0.4727272727272727,
+          "confusion": [
+            [
+              83,
+              8
+            ],
+            [
+              21,
+              13
+            ]
+          ]
+        },
+        "nb": {
+          "accuracy": 0.912,
+          "precision": 0.8285714285714286,
+          "recall": 0.8529411764705882,
+          "f1": 0.8405797101449275,
+          "confusion": [
+            [
+              85,
+              6
+            ],
+            [
+              5,
+              29
+            ]
+          ]
+        }
+      },
+      "risk": {
+        "knn": {
+          "accuracy": 0.584,
+          "precision": 0.6190476190476191,
+          "recall": 0.582089552238806,
+          "f1": 0.6,
+          "confusion": [
+            [
+              34,
+              24
+            ],
+            [
+              28,
+              39
+            ]
+          ]
+        },
+        "nb": {
+          "accuracy": 0.952,
+          "precision": 0.9552238805970149,
+          "recall": 0.9552238805970149,
+          "f1": 0.9552238805970149,
+          "confusion": [
+            [
+              55,
+              3
+            ],
+            [
+              3,
+              64
+            ]
+          ]
+        }
+      }
+    },
+    "justification_text": "Model comparison report emitted at startup.",
+    "trigger_reason": "startup_model_report",
+    "step": 0,
+    "timestamp": "2026-05-08T11:13:50.208398Z",
+    "victim_id": "",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "victim_priority_list": [],
+    "updated_survival_prob": 0.0,
+    "assignment_plan": {},
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "REPLAN",
+    "trigger_reason": "scenario_event",
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {},
+    "justification_text": "Road blocked at (3, 5); no active ambulance route crossed the blocked cell.",
+    "step": 2,
+    "timestamp": "2026-05-08T11:13:50.759360Z",
+    "victim_id": "",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "ASSIGNMENT",
+    "trigger_reason": "scenario_event",
+    "victim_id": "V6",
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {
+      "A1": "V1",
+      "A2": "V4"
+    },
+    "justification_text": "Scenario event added V6 at (6, 1); user can manually replan.",
+    "step": 4,
+    "timestamp": "2026-05-08T11:13:51.821168Z",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "REPLAN",
+    "trigger_reason": "scenario_event",
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {},
+    "justification_text": "Road blocked at (6, 5); no active ambulance route crossed the blocked cell.",
+    "step": 5,
+    "timestamp": "2026-05-08T11:13:52.261198Z",
+    "victim_id": "",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "ROUTE_SELECTION",
+    "victim_id": "V2",
+    "chosen_path": [
+      [
+        0,
+        9
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        6,
+        9
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        0,
+        8
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        9,
+        7
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        9,
+        9
+      ]
+    ],
+    "alpha_used": 7.0,
+    "time_cost": 33.0,
+    "risk_cost": 0.0,
+    "algorithm": "dfs",
+    "justification_text": "Auto-dispatched A1 to V2 from the full rescue queue with DFS (alpha=7.0).",
+    "frontier_sizes": [],
+    "optimality_ratio": 2.5385,
+    "fuzzy_risk_along_path": 0.140028725241251,
+    "trigger_reason": "full_rescue_queue",
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {
+      "A1": "V2"
+    },
+    "step": 37,
+    "timestamp": "2026-05-08T11:14:08.465870Z",
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "ROUTE_SELECTION",
+    "victim_id": "V1",
+    "chosen_path": [
+      [
+        9,
+        0
+      ],
+      [
+        8,
+        0
+      ],
+      [
+        7,
+        0
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "alpha_used": 7.0,
+    "time_cost": 79.0,
+    "risk_cost": 0.0,
+    "algorithm": "dfs",
+    "justification_text": "Auto-dispatched A2 to V1 from the full rescue queue with DFS (alpha=7.0).",
+    "frontier_sizes": [],
+    "optimality_ratio": 3.4348,
+    "fuzzy_risk_along_path": 0.1381400558420154,
+    "trigger_reason": "full_rescue_queue",
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {
+      "A1": "V2",
+      "A2": "V1"
+    },
+    "step": 37,
+    "timestamp": "2026-05-08T11:14:08.503874Z",
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "ASSIGNMENT",
+    "assignment_plan": {
+      "A1": [
+        "V2",
+        "V4"
+      ],
+      "A2": [
+        "V1",
+        "V6",
+        "V3",
+        "V5"
+      ]
+    },
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "trigger_reason": "full_rescue_plan",
+    "justification_text": "Full rescue plan computed from CSP with ML-informed priorities.",
+    "step": 37,
+    "timestamp": "2026-05-08T11:14:08.531329Z",
+    "victim_id": "",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "REPLAN",
+    "trigger_reason": "road_blocked",
+    "victim_id": "V2",
+    "chosen_path": [
+      [
+        7,
+        9
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        0,
+        8
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        9,
+        9
+      ]
+    ],
+    "alpha_used": 7.0,
+    "time_cost": 24.0,
+    "risk_cost": 0.0,
+    "old_route_cost": Infinity,
+    "new_route_cost": 24.0,
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {
+      "A1": "V2",
+      "A2": "V1"
+    },
+    "frontier_sizes": [],
+    "optimality_ratio": 1.5,
+    "fuzzy_risk_along_path": 0.13568169618894246,
+    "justification_text": "Route for A1 to V2 crossed blocked cell (4, 7); replanned with dfs (\u03b1=7.0).",
+    "step": 44,
+    "timestamp": "2026-05-08T11:14:12.024975Z",
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "REPLAN",
+    "trigger_reason": "road_blocked",
+    "victim_id": "V1",
+    "chosen_path": [
+      [
+        9,
+        1
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        9,
+        4
+      ],
+      [
+        9,
+        5
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        9,
+        6
+      ],
+      [
+        9,
+        7
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        6,
+        9
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        8
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        0,
+        6
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "alpha_used": 7.0,
+    "time_cost": 108.0,
+    "risk_cost": 0.0,
+    "old_route_cost": Infinity,
+    "new_route_cost": 108.0,
+    "victim_priority_list": [
+      {
+        "victim_id": "V2",
+        "priority": 3.2
+      },
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {
+      "A1": "V2",
+      "A2": "V1"
+    },
+    "frontier_sizes": [],
+    "optimality_ratio": 4.9091,
+    "fuzzy_risk_along_path": 0.1425917668337454,
+    "justification_text": "Route for A2 to V1 crossed blocked cell (5, 3); replanned with dfs (\u03b1=7.0).",
+    "step": 56,
+    "timestamp": "2026-05-08T11:14:17.918482Z",
+    "updated_survival_prob": 0.0,
+    "scenario": "",
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "RESCUE_COMPLETE",
+    "trigger_reason": "ambulance_arrival_med_center",
+    "victim_id": "V2",
+    "updated_survival_prob": 0.001,
+    "assignment_plan": {
+      "A1": "V2",
+      "A2": "V1"
+    },
+    "victim_priority_list": [
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V4",
+        "priority": 2.1
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "justification_text": "A1 delivered V2 to a medical centre; rescue completed in 15.5s.",
+    "step": 68,
+    "timestamp": "2026-05-08T11:14:23.766385Z",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "RESCUE_COMPLETE",
+    "trigger_reason": "ambulance_arrival_med_center",
+    "victim_id": "V4",
+    "updated_survival_prob": 0.1445688178191955,
+    "assignment_plan": {
+      "A1": "V2",
+      "A2": "V1"
+    },
+    "victim_priority_list": [
+      {
+        "victim_id": "V1",
+        "priority": 3.1111
+      },
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "justification_text": "A1 delivered V4 to a medical centre; rescue completed in 15.5s.",
+    "step": 68,
+    "timestamp": "2026-05-08T11:14:23.784340Z",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "RESCUE_COMPLETE",
+    "trigger_reason": "ambulance_arrival_med_center",
+    "victim_id": "V1",
+    "updated_survival_prob": 0.001,
+    "assignment_plan": {
+      "A2": "V1"
+    },
+    "victim_priority_list": [
+      {
+        "victim_id": "V6",
+        "priority": 2.2
+      },
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "justification_text": "A2 delivered V1 to a medical centre; rescue completed in 63.5s.",
+    "step": 164,
+    "timestamp": "2026-05-08T11:15:11.765303Z",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "RESCUE_COMPLETE",
+    "trigger_reason": "ambulance_arrival_med_center",
+    "victim_id": "V6",
+    "updated_survival_prob": 0.9671866536329241,
+    "assignment_plan": {
+      "A2": "V1"
+    },
+    "victim_priority_list": [
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "justification_text": "A2 delivered V6 to a medical centre; rescue completed in 63.5s.",
+    "step": 164,
+    "timestamp": "2026-05-08T11:15:11.781901Z",
+    "chosen_path": [],
+    "alpha_used": 0.0,
+    "time_cost": 0.0,
+    "risk_cost": 0.0,
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "scenario": "",
+    "frontier_sizes": [],
+    "optimality_ratio": 1.0,
+    "fuzzy_risk_along_path": 0.0,
+    "ml_report": {},
+    "reallocation_made": false,
+    "realocation_made": false,
+    "module": "",
+    "outcome": ""
+  },
+  {
+    "event_type": "ROUTE_SELECTION",
+    "victim_id": "V3",
+    "chosen_path": [
+      [
+        9,
+        0
+      ],
+      [
+        8,
+        0
+      ],
+      [
+        7,
+        0
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        9,
+        4
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        9,
+        4
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        9,
+        4
+      ],
+      [
+        9,
+        5
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        9,
+        6
+      ],
+      [
+        9,
+        7
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        6,
+        9
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        8
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        0,
+        6
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "alpha_used": 7.0,
+    "time_cost": 119.0,
+    "risk_cost": 0.0,
+    "algorithm": "dfs",
+    "justification_text": "Auto-dispatched A2 to V3 from the full rescue queue with DFS (alpha=7.0).",
+    "frontier_sizes": [],
+    "optimality_ratio": 7.0,
+    "fuzzy_risk_along_path": 0.14720940418638487,
+    "trigger_reason": "full_rescue_queue",
+    "victim_priority_list": [
+      {
+        "victim_id": "V3",
+        "priority": 2.1667
+      },
+      {
+        "victim_id": "V5",
+        "priority": 1.1
+      }
+    ],
+    "assignment_plan": {
+      "A2": "V3"
+    },
+    "step": 164,
+    "timestamp": "2026-05-08T11:15:11.808613Z",
+    "old_route_cost": 0.0,
+    "new_route_cost": 0.0,
+    "updated_survival_prob": 0.0,
+    "scenario": "",
     "ml_report": {},
     "reallocation_made": false,
     "realocation_made": false,

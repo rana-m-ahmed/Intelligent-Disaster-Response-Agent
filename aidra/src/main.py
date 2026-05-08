@@ -495,10 +495,14 @@ def run_scenario(scenario: str) -> Dict[str, object]:
 
     optimal_cost = comparison["astar_alpha_0.0"].total_cost
     avg_cost = sum(res.total_cost for res in comparison.values()) / len(comparison)
-    path_opt_ratio = avg_cost / max(optimal_cost, 1.0)
+    path_opt_ratio = max(avg_cost / max(optimal_cost, 1.0), 1.0)
     victim_map = {v.victim_id: v for v in env.victims}
     kit_used = sum(victim_map[v_id].kits_needed for v_id in rescued)
-    resource_util = kit_used / 10.0
+    ambulances_dispatched = len(refined_assignment)
+    teams_deployed = 1 if env else 0
+    resources_used = ambulances_dispatched + kit_used + teams_deployed
+    resources_available = len(env.ambulances) + 10 + 1
+    resource_util = (resources_used / max(resources_available, 1)) * 100.0
     kpi = {
         "victims_saved": victims_saved,
         "average_rescue_time": avg_time,
@@ -506,6 +510,8 @@ def run_scenario(scenario: str) -> Dict[str, object]:
         "resource_util_rate": resource_util,
         "risk_exposure_score": risk_exposure,
         "kit_usage": kit_used,
+        "resources_used": resources_used,
+        "resources_available": resources_available,
     }
     _write_kpis(os.path.join(RESULTS_DIR, f"kpis_{scenario}.csv"), kpi)
 
