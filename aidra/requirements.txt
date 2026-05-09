@@ -7,9 +7,3 @@ flask-socketio
 python-socketio
 python-engineio
 eventlet
-pytest
-flask
-flask-socketio
-python-socketio
-python-engineio
-eventlet
