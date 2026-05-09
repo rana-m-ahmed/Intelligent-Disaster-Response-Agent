@@ -7,6 +7,6 @@ flask
 flask-socketio
 python-socketio
 python-engineio
-gevent==23.9.1
+gevent==24.10.1
 gevent-websocket==0.10.1
 gunicorn
