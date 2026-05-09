@@ -1,6 +1,7 @@
 numpy
 scikit-learn
 scikit-fuzzy
+networkx
 matplotlib
 pytest
 flask
