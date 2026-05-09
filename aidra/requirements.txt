@@ -1,9 +1,11 @@
 numpy
 scikit-learn
 scikit-fuzzy
+matplotlib
 pytest
 flask
 flask-socketio
 python-socketio
 python-engineio
-eventlet
+eventlet==0.33.3
+gunicorn

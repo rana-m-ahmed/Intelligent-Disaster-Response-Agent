@@ -23,9 +23,9 @@ from search import compute_path_cost, manhattan, search
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 # CLEANUP: load secret from environment to avoid hardcoded secrets in repo
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "aidra-secret")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "fallback-dev-key")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 state_lock = Lock()
 
@@ -1385,11 +1385,11 @@ def _generate_justification(
 
 if __name__ == "__main__":
     # Respect environment for host/port/debug mode in production
-    host = os.getenv("HOST", "127.0.0.1")
+    host = os.getenv("HOST", "0.0.0.0")
     try:
-        port = int(os.getenv("PORT", "5001"))
+        port = int(os.environ.get("PORT", 5000))
     except ValueError:
-        port = 5001
+        port = 5000
     debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
     logging.info(f"Starting AIDRA server on {host}:{port} (debug={debug})")
     socketio.run(app, debug=debug, host=host, port=port, use_reloader=False)
