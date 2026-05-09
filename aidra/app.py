@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import os
 import sys
+import logging
+from collections import deque
 from threading import Lock
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -20,7 +22,9 @@ from ml_model import MLModel
 from search import compute_path_cost, manhattan, search
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
-app.config["SECRET_KEY"] = "aidra-secret"
+# CLEANUP: load secret from environment to avoid hardcoded secrets in repo
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "aidra-secret")
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 state_lock = Lock()
@@ -42,8 +46,9 @@ class GlobalState:
         self.simulation_running = True
         self.step_count = 0
         self.simulation_step = 0
-        self.rescue_step_durations: List[int] = []
-        self.route_risk_scores: List[float] = []
+        # CLEANUP: cap in-memory accumulators to prevent unbounded growth in long-running servers
+        self.rescue_step_durations = deque(maxlen=500)
+        self.route_risk_scores = deque(maxlen=500)
         self.risk_steps = 0
         self.active_assignments: Dict[str, str] = {}
         self.route_costs: Dict[str, float] = {}
@@ -1379,4 +1384,12 @@ def _generate_justification(
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=False, host="127.0.0.1", port=5001, use_reloader=False)
+    # Respect environment for host/port/debug mode in production
+    host = os.getenv("HOST", "127.0.0.1")
+    try:
+        port = int(os.getenv("PORT", "5001"))
+    except ValueError:
+        port = 5001
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    logging.info(f"Starting AIDRA server on {host}:{port} (debug={debug})")
+    socketio.run(app, debug=debug, host=host, port=port, use_reloader=False)

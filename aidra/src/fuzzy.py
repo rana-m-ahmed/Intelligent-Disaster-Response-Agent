@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
@@ -44,5 +45,10 @@ class FuzzyRisk:
         self.simulator.input["spread"] = hazard_rate
         self.simulator.compute()
         crisp = float(self.simulator.output["risk"])
-        print(f"FuzzyRuleTrace: blockage={block_prob:.3f}, spread={hazard_rate:.3f} -> risk={crisp:.3f}")
+        logging.debug(
+            "FuzzyRuleTrace: blockage=%0.3f, spread=%0.3f -> risk=%0.3f",
+            block_prob,
+            hazard_rate,
+            crisp,
+        )
         return crisp

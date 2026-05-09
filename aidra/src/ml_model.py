@@ -45,6 +45,8 @@ class MLModel:
         survival_path = os.path.join(MODELS_DIR, "survival_model.pkl")
         risk_path = os.path.join(MODELS_DIR, "risk_model.pkl")
         metrics_path = os.path.join(MODELS_DIR, "ml_metrics.json")
+        # CLEANUP: avoid expensive model training on app startup unless explicitly enabled
+        train_on_startup = os.getenv("ML_TRAIN_ON_STARTUP", "false").lower() == "true"
         try:
             if os.path.exists(survival_path) and os.path.exists(risk_path):
                 with open(survival_path, "rb") as f:
@@ -62,7 +64,12 @@ class MLModel:
                         for task, reports in raw.items()
                     }
                 return
-            self.train_models()
+            if train_on_startup:
+                self.train_models()
+            else:
+                # No models on disk and training disabled — run in fallback mode.
+                self._fallback = True
+                return
         except Exception:
             # Fallback allows the system to run if ML loading/training fails.
             self._fallback = True
