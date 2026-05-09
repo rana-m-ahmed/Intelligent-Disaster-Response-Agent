@@ -1,6 +1,3 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/AIDRA-Adaptive%20Intelligent%20Disaster%20Response%20Agent-00c2ff?style=for-the-badge" alt="AIDRA Banner" />
-</p>
 
 <h1 align="center">AIDRA</h1>
 <p align="center"><b>Adaptive Intelligent Disaster Response Agent</b></p>
@@ -39,11 +36,7 @@ In evaluated scenarios, AIDRA achieved full rescue completion with strong operat
 ## 🧭 System Architecture (Hybrid AI Stack)
 
 <p align="center">
-  <img width="980" src="architecture.png" alt="AIDRA hybrid architecture diagram placeholder" />
-</p>
-
-<p align="center">
-  <i>Replace <code>architecture.png</code> with your final architecture figure.</i>
+  <img width="680" height="400" src="https://github.com/user-attachments/assets/6cd8ddb1-dd93-4e10-8131-ab4a5158385b" alt="AIDRA hybrid architecture diagram placeholder" />
 </p>
 
 <table align="center" width="100%">
@@ -104,6 +97,9 @@ In evaluated scenarios, AIDRA achieved full rescue completion with strong operat
 ---
 
 ## 🖥️ Real-time Command Dashboard (Interactive UI)
+<img width="1911" height="550" alt="image" src="https://github.com/user-attachments/assets/cc28ddc8-33ba-4b25-bf62-b0dafd9a1f11" />
+<img width="1916" height="550" alt="image" src="https://github.com/user-attachments/assets/b22889bf-3ada-4201-9f0b-0cc48831ee61" />
+
 
 AIDRA includes a **Flask + Socket.IO frontend** that acts as a live mission control surface for operators.
 
@@ -148,7 +144,7 @@ AIDRA includes a **Flask + Socket.IO frontend** that acts as a live mission cont
 
 ## 📊 Performance Matrix
 
-<table width="100%">
+<table width="100%" align="center">
   <tr>
     <th align="left">KPI</th>
     <th align="left">Reported Result</th>
