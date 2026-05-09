@@ -25,7 +25,7 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 # CLEANUP: load secret from environment to avoid hardcoded secrets in repo
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "fallback-dev-key")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")
 
 state_lock = Lock()
 
