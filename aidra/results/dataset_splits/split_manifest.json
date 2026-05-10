@@ -1,0 +1,12 @@
+{
+  "total_rows": 20000,
+  "train_rows": 14000,
+  "validation_rows": 3000,
+  "test_rows": 3000,
+  "feature_contract": [
+    "severity",
+    "distance",
+    "area_risk",
+    "time_since"
+  ]
+}

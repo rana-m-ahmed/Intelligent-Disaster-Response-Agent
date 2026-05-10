@@ -126,12 +126,34 @@ def test_csp_constraints_and_backtracks():
 
 def test_ml_training_and_predictions():
     ml = MLModel()
-    X, y_survival, y_risk = ml._generate_dataset()
-    assert X.shape[0] == 500
+    X, y_survival, y_risk, feature_rows = ml._generate_dataset()
+    assert X.shape[0] == 20000
+    assert X.shape[1] == 4
+    assert len(y_survival) == 20000
+    assert len(y_risk) == 20000
+    assert len(feature_rows) == 20000
     pred_survival = ml.predict_survival([1.0, 1.0, 0.5, 5.0])
     pred_risk = ml.predict_risk([1.0, 1.0, 0.5, 5.0])
     assert 0.0 <= pred_survival <= 1.0
     assert 0.0 <= pred_risk <= 1.0
+
+
+def test_ml_dataset_split_artifacts_are_created():
+    ml = MLModel()
+    rows = ml._load_dataset_rows()
+    X, y_survival, y_risk, feature_rows = ml._generate_dataset(rows)
+    train_idx, val_idx, test_idx = ml._split_indices(X, y_survival, y_risk)
+
+    assert len(rows) == 20000
+    assert len(train_idx) + len(val_idx) + len(test_idx) == len(rows)
+
+    ml._write_split_artifacts(rows, feature_rows, train_idx, val_idx, test_idx)
+
+    split_dir = os.path.join(ROOT_PATH, "results", "dataset_splits")
+    assert os.path.exists(os.path.join(split_dir, "train.csv"))
+    assert os.path.exists(os.path.join(split_dir, "validation.csv"))
+    assert os.path.exists(os.path.join(split_dir, "test.csv"))
+    assert os.path.exists(os.path.join(split_dir, "split_manifest.json"))
 
 
 def test_fuzzy_rules_and_output():

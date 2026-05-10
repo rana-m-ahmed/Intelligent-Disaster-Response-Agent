@@ -25,7 +25,24 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 # CLEANUP: load secret from environment to avoid hardcoded secrets in repo
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "fallback-dev-key")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")
+
+
+def _create_socketio_server() -> SocketIO:
+    """Create a SocketIO server with a safe async-mode fallback."""
+    preferred_modes = [os.environ.get("SOCKETIO_ASYNC_MODE"), "gevent", "threading"]
+    seen_modes: set[str] = set()
+    for async_mode in preferred_modes:
+        if not async_mode or async_mode in seen_modes:
+            continue
+        seen_modes.add(async_mode)
+        try:
+            return SocketIO(app, cors_allowed_origins="*", async_mode=async_mode)
+        except ValueError:
+            continue
+    return SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+
+
+socketio = _create_socketio_server()
 
 state_lock = Lock()
 

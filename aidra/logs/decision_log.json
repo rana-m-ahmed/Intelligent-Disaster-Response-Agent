@@ -1,158 +1,5 @@
 [
   {
-    "event_type": "ROUTE_SELECTION",
-    "victim_id": "V1",
-    "chosen_path": [
-      [
-        0,
-        9
-      ],
-      [
-        0,
-        8
-      ],
-      [
-        0,
-        7
-      ],
-      [
-        0,
-        6
-      ],
-      [
-        0,
-        5
-      ],
-      [
-        0,
-        4
-      ],
-      [
-        0,
-        3
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 0.0,
-    "time_cost": 9.0,
-    "risk_cost": 0.0,
-    "algorithm": "astar",
-    "justification_text": "Auto-dispatched A1 to V1 from the full rescue queue with ASTAR (alpha=0.0).",
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "trigger_reason": "full_rescue_queue",
-    "victim_priority_list": [
-      {
-        "victim_id": "V1",
-        "priority": 1.5
-      },
-      {
-        "victim_id": "V2",
-        "priority": 1.25
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1"
-    },
-    "step": 0,
-    "timestamp": "2026-05-09T06:31:28.314588Z",
-    "old_route_cost": 0.0,
-    "new_route_cost": 0.0,
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
-    "event_type": "REPLAN",
-    "trigger_reason": "road_blocked",
-    "victim_id": "V2",
-    "chosen_path": [
-      [
-        0,
-        8
-      ],
-      [
-        0,
-        7
-      ],
-      [
-        0,
-        6
-      ],
-      [
-        0,
-        5
-      ],
-      [
-        0,
-        4
-      ],
-      [
-        0,
-        3
-      ],
-      [
-        0,
-        2
-      ],
-      [
-        0,
-        1
-      ],
-      [
-        0,
-        0
-      ]
-    ],
-    "alpha_used": 0.0,
-    "time_cost": 8.0,
-    "risk_cost": 0.0,
-    "old_route_cost": 8.0,
-    "new_route_cost": 8.0,
-    "victim_priority_list": [
-      {
-        "victim_id": "V1",
-        "priority": 2.0
-      },
-      {
-        "victim_id": "V2",
-        "priority": 1.3333
-      }
-    ],
-    "assignment_plan": {
-      "A1": "V1"
-    },
-    "frontier_sizes": [],
-    "optimality_ratio": 1.0,
-    "fuzzy_risk_along_path": 0.13333333333333325,
-    "justification_text": "Route for A1 to V2 crossed blocked cell (0, 7); replanned with astar (\u03b1=0.0).",
-    "step": 0,
-    "timestamp": "2026-05-09T06:31:28.318203Z",
-    "updated_survival_prob": 0.0,
-    "scenario": "",
-    "ml_report": {},
-    "reallocation_made": false,
-    "realocation_made": false,
-    "module": "",
-    "outcome": ""
-  },
-  {
     "event_type": "SCENARIO_START",
     "scenario": "A",
     "justification_text": "Starting scenario A.",
@@ -184,7 +31,7 @@
       "A2": "V3"
     },
     "step": 0,
-    "timestamp": "2026-05-09T06:31:28.493275Z",
+    "timestamp": "2026-05-10T08:40:35.519052Z",
     "victim_id": "",
     "chosen_path": [],
     "alpha_used": 0.0,
@@ -207,68 +54,82 @@
     "ml_report": {
       "survival": {
         "knn": {
-          "accuracy": 0.768,
-          "precision": 0.7085622710622711,
-          "recall": 0.6472204266321913,
-          "f1": 0.662004662004662,
+          "accuracy": 0.941,
+          "precision": 0.9447634174759261,
+          "recall": 0.7153703703703704,
+          "f1": 0.781574155162974,
           "confusion": [
             [
-              83,
-              8
+              2693,
+              7
             ],
             [
-              21,
-              13
+              170,
+              130
             ]
           ]
         },
         "nb": {
-          "accuracy": 0.912,
-          "precision": 0.8865079365079365,
-          "recall": 0.8935035552682611,
-          "f1": 0.8899031147409721,
+          "accuracy": 0.9246666666666666,
+          "precision": 0.8149655011790736,
+          "recall": 0.7137037037037037,
+          "f1": 0.7516468960990248,
           "confusion": [
             [
-              85,
-              6
+              2639,
+              61
             ],
             [
-              5,
-              29
+              165,
+              135
             ]
           ]
         }
       },
       "risk": {
         "knn": {
-          "accuracy": 0.584,
-          "precision": 0.5837173579109063,
-          "recall": 0.584148224395265,
-          "f1": 0.5833333333333333,
+          "accuracy": 0.715,
+          "precision": 0.7126942831220014,
+          "recall": 0.6530555555555555,
+          "f1": 0.6621215718114987,
           "confusion": [
             [
-              34,
-              24
+              925,
+              254,
+              21
             ],
             [
-              28,
-              39
+              81,
+              1014,
+              105
+            ],
+            [
+              23,
+              371,
+              206
             ]
           ]
         },
         "nb": {
-          "accuracy": 0.952,
-          "precision": 0.9517498713329902,
-          "recall": 0.9517498713329902,
-          "f1": 0.9517498713329902,
+          "accuracy": 0.746,
+          "precision": 0.8589388335878612,
+          "recall": 0.658888888888889,
+          "f1": 0.6608268567221393,
           "confusion": [
             [
-              55,
+              906,
+              291,
               3
             ],
             [
-              3,
-              64
+              0,
+              1198,
+              2
+            ],
+            [
+              0,
+              466,
+              134
             ]
           ]
         }
@@ -277,7 +138,7 @@
     "justification_text": "Model comparison report emitted at startup.",
     "trigger_reason": "startup_model_report",
     "step": 0,
-    "timestamp": "2026-05-09T06:31:28.504601Z",
+    "timestamp": "2026-05-10T08:40:35.520333Z",
     "victim_id": "",
     "chosen_path": [],
     "alpha_used": 0.0,
